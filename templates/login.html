@@ -1,3 +1,28 @@
+from flask import Flask, render_template, request, redirect, url_for, flash
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        # Replace with your actual authentication logic
+        if username == 'admin' and password == 'password':
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid username and password.')
+            return redirect(url_for('login'))
+    return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return 'Welcome to the dashboard!'
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 {% extends "layouts/base.html" %}
 {% set project = "Login" %}
 
@@ -21,22 +46,21 @@
                                     Invalid username and password.
                                 </tr>
                             {% endif %}
-                            {% if logout %}
-                                <tr class="alert alert-success">
-                                    You have been logged out.
-                                </tr>
-                            {% endif %}
-                            <tr><th><label for="username">User ID</label></th></tr>
-                            <tr><td><input id='username' name="username" size="20" required></td></tr>
-                            <tr><th><label for="password">Password</label></th></tr>
-                            <tr><td><input type="password" id="password" name="password" size="20" required></td></tr>
-                            <!-- Hidden input for 'next' page, which is set on unauthorized redirects -->
-                            <input type="hidden" name="next" value="{{ next }}">
-                            <tr><th><input type="submit" value="Submit"></th></tr>
+                            <tr>
+                                <td>Username:</td>
+                                <td><input type="text" name="username" required></td>
+                            </tr>
+                            <tr>
+                                <td>Password:</td>
+                                <td><input type="password" name="password" required></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><input type="submit" value="Login"></td>
+                            </tr>
                         </table>
                     </form>
                 </div>
-
+            </div>
         </div>
     </div>
 {% endblock %}
