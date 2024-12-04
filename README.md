@@ -83,7 +83,7 @@ pip install -r requirements.txt
     - Start with Play button
       - Play button sub option contains Debug
     - Click on loop back address in terminal to launch
-      - Output window will contain page to launch http://127.0.0.1:8087
+      - Output window will contain page to launch [http://127.0.0.1:8087](http://127.0.0.1:8087)
     - Login using your secrets
 
 ## Idea
@@ -144,5 +144,5 @@ Or read this entire series of articles starting with the Intro, Anatomy, and mor
 - The VANTA javascript statics (backgrounds) are shown and defaulted in base.html (birds) but are block-replaced as needed in other templates (solar, net, ...)
 - The Bootstrap Navbar code is in navbar.html. The base.html code includes navbar.html.  The WSGI html files extend base.html files.  This is a process of management and correlation to optimize code management.  For instance, if the menu changes discovery of navbar.html is easy, one change reflects on all WSGI html files.
 - Jinja2 variables usage is to isolate data and allow redefinitions of attributes in templates.  Observe "{% set variable = %}" syntax for definition and "{{ variable }}" for reference.
-- The base.html uses a combination of Bootstrap grid styling and custom CSS styling.  Grid styling in observation with the "<Col-3>" markers.  A Bootstrap Grid has a width of 12, thus four "Col-3" markers could fit on a Grid row.
+- The base.html uses a combination of Bootstrap grid styling and custom CSS styling.  Grid styling in observation with the `Col-3` markers.  A Bootstrap Grid has a width of 12, thus four `Col-3` markers could fit on a Grid row.
 - A key purpose of this project is to embed links to other content.  The "href=" definition embeds hyperlinks into the rendered HTML.  The base.html file shows usage of "href={{github}}", the "{{github}}" is a Jinja2 variable.  Jinja2 variables are pre-processed by Python, a variable swap with value, before being sent to the browser.
