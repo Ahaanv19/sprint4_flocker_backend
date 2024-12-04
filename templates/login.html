@@ -8,7 +8,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        # Replace with your actual authentication logic
+        # Replace with your actual login
         if username == 'admin' and password == 'password':
             return redirect(url_for('dashboard'))
         else:
