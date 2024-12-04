@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "> This is a project to support AP Computer Science Principles (CSP) as well as a UC articulated Data Structures course. It was crafted iteratively starting in 2020 to the present time. The primary purposes are ...",
   "main": "index.js",
+  "type": "module", 
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
