@@ -15,5 +15,5 @@ seaborn
 scikit-learn
 pymysql
 psycopg2-binary
-python_dotenv
+python-dotenv
 boto3
