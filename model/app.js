@@ -31,7 +31,7 @@ const App = () => {
     <div>
       {isLoggedIn ? (
         <div>
-          <h1>Welcome, User!</h1>
+          <h1>You have logged in!</h1>
           <button onClick={handleLogout}>Logout</button>
           <ProtectedFeature />
         </div>
@@ -71,7 +71,7 @@ const LoginForm = ({ onLogin }) => {
 };
 
 const ProtectedFeature = () => {
-  return <div>This is a protected feature only visible to logged-in users.</div>;
+  return <div> Add feature that should be hidden before login here.</div>;
 };
 
 export default App;
