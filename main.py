@@ -147,6 +147,28 @@ def reset_password(user_id):
         return jsonify({'message': 'Password reset successfully'}), 200
     return jsonify({'error': 'Password reset failed'}), 500
 
+@app.route('/api/noah', methods=['GET'])
+def get_data():
+    # start a list, to be used like a information database
+    InfoDb = [] 
+
+    # add a row to list, an Info record
+    InfoDb.append({
+        "FirstName": "Noah",
+        "LastName": "Harris",
+        "DOB": "March 9",
+        "Residence": "San Diego",
+        "Email": "noah@sirkenneth.com",
+        "Favorite_NFL_Team": "Detriot Lions",
+        "Plays_Sports": ["Football", "Futsal", "Soccer"]
+    })
+    return jsonify(InfoDb)
+
+if __name__ == '__main__': # main.py runs this code
+    # starts flask server on default port, http://127.0.0.1:5001
+    app.run(debug=True, host="0.0.0.0", port="8887")
+
+
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
 
@@ -230,3 +252,5 @@ app.cli.add_command(custom_cli)
 if __name__ == "__main__":
     # change name for testing
     app.run(debug=True, host="0.0.0.0", port="8887")
+
+
