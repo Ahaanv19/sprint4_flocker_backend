@@ -4,28 +4,37 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# In-memory database (list of books)
+# User information endpoint
+@app.route('/api/user', methods=['GET'])
+def get_user_info():
+    user_info = {
+        "name": "Ahaan Vaidyanathan",
+        "age": 15,
+        "city": "San Diego",
+        "hobbies": ["Video Games", "Coding", "Modeling"]
+    }
+    return jsonify(user_info)
+
+# Pre-populated book list
 books = [
+    {"title": "The Hunger Games", "author": "Suzanne Collins"},
     {"title": "To Kill a Mockingbird", "author": "Harper Lee"},
     {"title": "1984", "author": "George Orwell"}
 ]
 
-# API endpoint to fetch all books
+# Get all books
 @app.route('/api/books', methods=['GET'])
 def get_books():
     return jsonify(books)
 
-# API endpoint to add a new book
+# Add a new book
 @app.route('/api/books', methods=['POST'])
 def add_book():
     data = request.get_json()
-    new_book = {"title": data["title"], "author": data["author"]}
+    new_book = {"title": data['title'], "author": data['author']}
     books.append(new_book)
-    return jsonify(new_book), 201
+    return jsonify({"message": "Book added successfully!"}), 201
 
 if __name__ == '__main__':
     app.run(port=3000)
-
-
-
 
