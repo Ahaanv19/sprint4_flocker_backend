@@ -23,6 +23,14 @@ class StudentAPI:
                 "FavoriteBook": "Harry Potter and the",                
                 "FavoriteNFLTeam" : "Detriot Lions",           
                 },
+            "Ahaan": {
+                "name": "Ahaan",
+                "age": 15,
+                "major": "N/A",
+                "university": "N/A",
+                "grade" : 10,
+                "DOB" : "May 19"
+            },
             "Arnav": {
                 "name": "Arnav",
                 "age": 15,
