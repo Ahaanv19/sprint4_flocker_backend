@@ -1,14 +1,14 @@
-from flask import Blueprint, jsonify
-from flask_cors import CORS
+from flask import Flask, jsonify
+from flask_cors import CORS  # Import CORS
 
-# Define the Blueprint
-ahaan_api = Blueprint('ahaan_api', __name__)
+# Initialize Flask app
+app = Flask(__name__)
 
-# Enable CORS for this Blueprint
-CORS(ahaan_api)
+# Enable CORS for the entire app
+CORS(app)
 
-# Example endpoint
-@ahaan_api.route('/api/ahaan', methods=['GET'])
+# Example API endpoint
+@app.route('/api/ahaan', methods=['GET'])
 def get_ahaan_info():
     return jsonify({
         "name": "Ahaan Vaidyanathan",
@@ -16,3 +16,8 @@ def get_ahaan_info():
         "city": "San Diego",
         "hobbies": ["video games", "coding", "modeling"]
     })
+
+if __name__ == '__main__':
+    # Run the app
+    app.run(debug=True, host="127.0.0.1", port=8887)
+
