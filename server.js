@@ -1,11 +1,14 @@
-import express from 'express';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors');
+
 const app = express();
 const port = process.env.PORT || 3000;
+
 // Use the CORS middleware
 app.use(cors({
-  origin: 'https://ahaanv19.github.io/LitConnect/' // Replace with your allowed origin
+  origin: ['https://nighthawkcoders.github.io', 'https://ahaanv19.github.io']
 }));
+
 // Define a route for the root URL
 app.get('/', (req, res) => {
   res.send('Hello, World!');
