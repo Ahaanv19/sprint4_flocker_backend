@@ -53,9 +53,9 @@ def get_jacob_info():
 @cross_origin()  # Allow CORS for this route
 def get_person4_info():
     return jsonify({
-        "name": "Person Four",
-        "age": 25,
-        "city": "Austin",
-        "hobbies": ["photography", "reading", "coding"]
+        "name": "James Edrosolo",
+        "age": 15,
+        "city": "San Diego",
+        "hobbies": ["wrestling", "working out", "eating"]
     })
 
