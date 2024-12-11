@@ -35,6 +35,12 @@ def add_book():
     books.append(new_book)
     return jsonify({"message": "Book added successfully!"}), 201
 
+staticData = ["data point 1", "data point 2", "data point 3"]
+
+@app.route('/api/staticData', methods=['GET'])
+def get_data():
+    return jsonify(staticData)
+
 if __name__ == '__main__':
     app.run(port=3000)
 
