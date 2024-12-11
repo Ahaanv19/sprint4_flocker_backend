@@ -15,7 +15,7 @@ def get_ahaan_info():
         "hobbies": ["video games", "coding", "modeling"]
     })
 
-# Route for Person 1's info
+# Route for Noah's info
 @ahaan_api.route('/api/noah', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
 def get_person1_info():
@@ -26,7 +26,7 @@ def get_person1_info():
         "hobbies": ["reading", "music", "traveling"]
     })
 
-# Route for Person 2's info
+# Route for Arnav's info
 @ahaan_api.route('/api/arnav', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
 def get_arnav_info():
@@ -37,7 +37,7 @@ def get_arnav_info():
         "hobbies": ["sports", "videogames", "coding"]
     })
 
-# Route for Person 3's info
+# Route for Jacob's info
 @ahaan_api.route('/api/jacob', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
 def get_jacob_info():
@@ -48,7 +48,7 @@ def get_jacob_info():
         "hobbies": ["gaming", "sports", "cooking"]
     })
 
-# Route for Person 4's info
+# Route for James's info
 @ahaan_api.route('/api/person4', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
 def get_person4_info():
