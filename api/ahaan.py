@@ -15,28 +15,18 @@ def get_ahaan_info():
         "hobbies": ["video games", "coding", "modeling"]
     })
 
-# Route for Noah's info with CORS applied
-@ahaan_api.route('/api/noah', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
-def get_noah_info():
-    return jsonify({
-        "name": "Noah Harris",
-        "age": 20,
-        "city": "New York",
-        "hobbies": ["football", "futsal", "soccer"]
-    })
-
-# Add more routes for other people as needed, with CORS applied
+# Route for Person 1 info 
 @ahaan_api.route('/api/person1', methods=['GET'])
 @cross_origin()  # This allows CORS for this specific route
 def get_person1_info():
     return jsonify({
         "name": "Person One",
-        "age": 22,
-        "city": "Los Angeles",
-        "hobbies": ["reading", "music", "traveling"]
+        "age": 20,
+        "city": "New York",
+        "hobbies": ["football", "futsal", "soccer"]
     })
 
+# Route for Person 2
 @ahaan_api.route('/api/person2', methods=['GET'])
 @cross_origin()  # This allows CORS for this specific route
 def get_person2_info():
@@ -47,6 +37,7 @@ def get_person2_info():
         "hobbies": ["sports", "movies", "music"]
     })
 
+# Route for Person 3
 @ahaan_api.route('/api/person3', methods=['GET'])
 @cross_origin()  # This allows CORS for this specific route
 def get_person3_info():
@@ -57,6 +48,7 @@ def get_person3_info():
         "hobbies": ["photography", "traveling", "art"]
     })
 
+# Route for Person 4
 @ahaan_api.route('/api/person4', methods=['GET'])
 @cross_origin()  # This allows CORS for this specific route
 def get_person4_info():
@@ -66,15 +58,3 @@ def get_person4_info():
         "city": "Seattle",
         "hobbies": ["gaming", "coding", "reading"]
     })
-
-@ahaan_api.route('/api/person5', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
-def get_person5_info():
-    return jsonify({
-        "name": "Person Five",
-        "age": 28,
-        "city": "Miami",
-        "hobbies": ["music", "sports", "fitness"]
-    })
-
-
