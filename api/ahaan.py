@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify
-from flask_cors import cross_origin  # Import cross_origin for specific routes
+from flask_cors import cross_origin  # Import cross_origin for enabling CORS on individual routes
 
 # Create a blueprint for all person-related APIs
 ahaan_api = Blueprint('ahaan_api', __name__)
 
-# Apply CORS for specific route
+# Route for Ahaan's info
 @ahaan_api.route('/api/ahaan', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
+@cross_origin()  # Allow CORS for this route
 def get_ahaan_info():
     return jsonify({
         "name": "Ahaan Vaidyanathan",
@@ -15,46 +15,47 @@ def get_ahaan_info():
         "hobbies": ["video games", "coding", "modeling"]
     })
 
-# Route for Person 1 info 
+# Route for Person 1's info
 @ahaan_api.route('/api/person1', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
+@cross_origin()  # Allow CORS for this route
 def get_person1_info():
     return jsonify({
         "name": "Person One",
-        "age": 20,
-        "city": "New York",
-        "hobbies": ["football", "futsal", "soccer"]
+        "age": 22,
+        "city": "Los Angeles",
+        "hobbies": ["reading", "music", "traveling"]
     })
 
-# Route for Person 2
+# Route for Person 2's info
 @ahaan_api.route('/api/person2', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
+@cross_origin()  # Allow CORS for this route
 def get_person2_info():
     return jsonify({
         "name": "Person Two",
-        "age": 30,
+        "age": 28,
         "city": "Chicago",
-        "hobbies": ["sports", "movies", "music"]
+        "hobbies": ["sports", "traveling", "cooking"]
     })
 
-# Route for Person 3
+# Route for Person 3's info
 @ahaan_api.route('/api/person3', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
+@cross_origin()  # Allow CORS for this route
 def get_person3_info():
     return jsonify({
         "name": "Person Three",
-        "age": 25,
-        "city": "Austin",
-        "hobbies": ["photography", "traveling", "art"]
+        "age": 30,
+        "city": "Seattle",
+        "hobbies": ["gaming", "hiking", "music"]
     })
 
-# Route for Person 4
+# Route for Person 4's info
 @ahaan_api.route('/api/person4', methods=['GET'])
-@cross_origin()  # This allows CORS for this specific route
+@cross_origin()  # Allow CORS for this route
 def get_person4_info():
     return jsonify({
         "name": "Person Four",
-        "age": 27,
-        "city": "Seattle",
-        "hobbies": ["gaming", "coding", "reading"]
+        "age": 25,
+        "city": "Austin",
+        "hobbies": ["photography", "reading", "coding"]
     })
+
