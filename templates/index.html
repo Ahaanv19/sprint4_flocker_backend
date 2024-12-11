@@ -61,4 +61,25 @@
             
         </div>
     </div>
+    <button id="testButton">Test CORS</button>
+    <script>
+        document.getElementById('testButton').addEventListener('click', () => {
+            fetch('http://localhost:3000/authenticate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: 'test', password: 'test' })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                alert(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('CORS request failed');
+            });
+        });
+    </script>
 {% endblock %}
