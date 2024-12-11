@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+from flask import Flask
 from flask_cors import cross_origin  # Import cross_origin for enabling CORS on individual routes
 
 # Create a blueprint for all person-related APIs
@@ -21,10 +22,16 @@ def get_ahaan_info():
 def get_person1_info():
     return jsonify({
         "name": "noah",
-        "age": 22,
-        "city": "Los Angeles",
-        "hobbies": ["reading", "music", "traveling"]
+        "age": 16,
+        "city": "El Cajon",
+        "hobbies": ["futsal", "football", "gaming"]
     })
+
+if __name__ == '__main__':
+    app = Flask(__name__)
+    app.register_blueprint(ahaan_api)
+    app.run(debug=True, host="0.0.0.0", port=8887)
+
 
 # Route for Arnav's info
 @ahaan_api.route('/api/arnav', methods=['GET'])
