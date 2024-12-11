@@ -15,15 +15,15 @@ def get_ahaan_info():
         "hobbies": ["video games", "coding", "modeling"]
     })
 
-# Route for Person 1's info
-@ahaan_api.route('/api/person1', methods=['GET'])
+# Route for Noah's info
+@ahaan_api.route('/api/noah', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
 def get_person1_info():
     return jsonify({
-        "name": "Person One",
-        "age": 22,
-        "city": "Los Angeles",
-        "hobbies": ["reading", "music", "traveling"]
+        "name": "Noah Harris",
+        "age": 16,
+        "city": "El Cajon",
+        "hobbies": ["football", "futsal", "videogames"]
     })
 
 # Route for Person 2's info

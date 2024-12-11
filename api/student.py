@@ -9,35 +9,26 @@ class StudentAPI:
     def get_student(name):
         students = {
             "Jacob": {
-                "FirstName": "Jacob",
-                "LastName": "Zierof",
-                "DOB": "who cares",
+                "name": "Jacob",
                 "age": 5,
                 "FavoriteBook": "asdfasd",            
             },
-            "NoahJohny": {
-                "FirstName": "ohnyNoah",
-                "LastName": "Harris",
-                "DOB": "March 9",
+            "Noah": {
+                "name": "Noah",
                 "age": 16,
-                "FavoriteBook": "Harry Potter and the",                
+                "FavoriteBook": "Harry Potter and the Deathly Hallows", 
+                "grade": 10,              
                 "FavoriteNFLTeam" : "Detriot Lions",           
                 },
             "Ahaan": {
                 "name": "Ahaan",
                 "age": 15,
-                "major": "N/A",
-                "university": "N/A",
                 "grade" : 10,
-                "DOB" : "May 19"
             },
             "Arnav": {
                 "name": "Arnav",
                 "age": 15,
-                "major": "N/A",
-                "university": "N/A",
                 "grade" : 10,
-                "DOB" : "June 25"
             }
         }
         return students.get(name)
@@ -51,15 +42,22 @@ class StudentAPI:
             # Use the helper method to get Jeff's details
             arnav_details = StudentAPI.get_student("Arnav")
             return jsonify(arnav_details)
+    class _Noah(Resource):
+        def get(self):
+            # Use the helper method to get Jeff's details
+            noah_details = StudentAPI.get_student("Noah")
+            return jsonify(noah_details)
     class _Bulk(Resource):
         def get(self):
             # Use the helper method to get both John's and Jeff's details
             jacob_details = StudentAPI.get_student("Jacob")
-            johny_details = StudentAPI.get_student("Johny")
-            return jsonify({"students": [jacob_details, johny_details]})
+            arnav_details = StudentAPI.get_student("Arnav")
+            noah_details = StudentAPI.get_student("Noah")
+            return jsonify({"students": [jacob_details, arnav_details, noah_details]})
     # Building REST API endpoints
     api.add_resource(_Jacob, '/student/jacob')
-    api.add_resource(_Arnav, '/student/johny')
+    api.add_resource(_Arnav, '/student/Arnav')
+    api.add_resource(_Noah, '/student/Noah')
     api.add_resource(_Bulk, '/students')
 # Instantiate the StudentAPI to register the endpoints
 student_api_instance = StudentAPI()
