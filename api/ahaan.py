@@ -27,14 +27,14 @@ def get_person1_info():
     })
 
 # Route for Person 2's info
-@ahaan_api.route('/api/person2', methods=['GET'])
+@ahaan_api.route('/api/arnav', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
-def get_person2_info():
+def get_arnav_info():
     return jsonify({
-        "name": "Person Two",
-        "age": 28,
-        "city": "Chicago",
-        "hobbies": ["sports", "traveling", "cooking"]
+        "name": "Arnav",
+        "age": 15,
+        "city": "San Diego",
+        "hobbies": ["sports", "videogames", "coding"]
     })
 
 # Route for Person 3's info
