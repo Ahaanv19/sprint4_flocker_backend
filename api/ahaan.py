@@ -27,11 +27,6 @@ def get_person1_info():
         "hobbies": ["futsal", "football", "gaming"]
     })
 
-if __name__ == '__main__':
-    app = Flask(__name__)
-    app.register_blueprint(ahaan_api)
-    app.run(debug=True, host="0.0.0.0", port=8887)
-
 
 # Route for Arnav's info
 @ahaan_api.route('/api/arnav', methods=['GET'])
@@ -66,3 +61,8 @@ def get_person4_info():
         "hobbies": ["wrestling", "working out", "eating"]
     })
 
+
+if __name__ == '__main__':
+    app = Flask(__name__)
+    app.register_blueprint(ahaan_api)
+    app.run(debug=True, host="0.0.0.0", port=8887)
