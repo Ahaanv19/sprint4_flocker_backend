@@ -29,6 +29,7 @@ from api.carChat import car_chat_api
 from api.ahaan import ahaan_api
 from api.student import student_api
 from api.preferences import preferences_api
+from api.chat import chat_api 
 
 from api.vote import vote_api
 # database Initialization functions
@@ -44,9 +45,7 @@ from model.vote import Vote, initVotes
 
 # register URIs for api endpoints
 app.register_blueprint(messages_api) # Adi added this, messages for his website
-app.register_blueprint(user_api)
 app.register_blueprint(pfp_api) 
-app.register_blueprint(post_api)
 app.register_blueprint(channel_api)
 app.register_blueprint(group_api)
 app.register_blueprint(section_api)
@@ -59,6 +58,9 @@ app.register_blueprint(car_api)
 app.register_blueprint(ahaan_api)
 app.register_blueprint(student_api)
 app.register_blueprint(preferences_api)
+app.register_blueprint(user_api, url_prefix='/api')
+app.register_blueprint(post_api, url_prefix='/api')
+app.register_blueprint(chat_api, url_prefix='/api')
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
