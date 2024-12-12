@@ -4,9 +4,9 @@ import cors from 'cors';
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Use the CORS middleware
+// Use the CORS middleware to allow all origins
 app.use(cors({
-  origin: ['https://nighthawkcoders.github.io', 'https://ahaanv19.github.io']
+  origin: true
 }));
 
 // Define a route for the root URL
