@@ -21,7 +21,7 @@ def get_ahaan_info():
 @cross_origin()  # Allow CORS for this route
 def get_person1_info():
     return jsonify({
-        "name": "noah",
+        "name": "Noah Harris",
         "age": 16,
         "city": "El Cajon",
         "hobbies": ["futsal", "football", "gaming"]
@@ -44,7 +44,7 @@ def get_arnav_info():
 @cross_origin()  # Allow CORS for this route
 def get_jacob_info():
     return jsonify({
-        "name": "jacob",
+        "name": "Jacob",
         "age": 15,
         "city": "San Diego",
         "hobbies": ["gaming", "sports", "cooking"]
