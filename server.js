@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 
 // Use the CORS middleware to allow all origins
 app.use(cors({
-  origin: true
+  origin: '*'
 }));
 
 // Define a route for the root URL
