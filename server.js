@@ -1,7 +1,7 @@
 import express from 'express';
 
 const app = express();
-const port = process.env.PORT || 8887;
+const port = process.env.PORT || 5000;
 
 // Custom middleware to set CORS headers
 app.use((req, res, next) => {
