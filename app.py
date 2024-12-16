@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
 
 # Define a route for the root URL
 @app.route('/')
