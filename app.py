@@ -1,8 +1,34 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Define a route for the root URL
+@app.route('/')
+def home():
+    return 'Hello, World!'
+
+# Define a login route
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    admin_user = os.getenv('ADMIN_USER')
+    admin_password = os.getenv('ADMIN_PASSWORD')
+    default_user = os.getenv('DEFAULT_USER')
+    default_password = os.getenv('DEFAULT_PASSWORD')
+
+    if (username == admin_user and password == admin_password) or (username == default_user and password == default_password):
+        return jsonify({'message': 'Login successful'})
+    else:
+        return jsonify({'message': 'Invalid username or password'}), 401
 
 # User information endpoint
 @app.route('/api/user', methods=['GET'])
@@ -42,5 +68,5 @@ def get_data():
     return jsonify(staticData)
 
 if __name__ == '__main__':
-    app.run(port=8887)
+    app.run(port=8887, debug=True)
 
