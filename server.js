@@ -1,13 +1,15 @@
 import express from 'express';
-import cors from 'cors';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8887;
 
-// Use the CORS middleware to allow all origins
-app.use(cors({
-  origin: '*'
-}));
+// Custom middleware to set CORS headers
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers', 'Content-Type, Accept');
+  next();
+});
 
 // Define a route for the root URL
 app.get('/', (req, res) => {
