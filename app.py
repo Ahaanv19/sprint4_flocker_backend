@@ -42,5 +42,5 @@ def get_data():
     return jsonify(staticData)
 
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=8887)
 
