@@ -1,13 +1,21 @@
-import express from 'express';
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 8887;
+const port = 8887;
 
-// Custom middleware to set CORS headers
+// Use the CORS middleware to allow requests from your frontend
+app.use(cors({
+  origin: 'http://127.0.0.1:5000', // Specify the exact origin of your frontend
+  credentials: true // Enable credentials
+}));
+
+// Custom middleware to set additional CORS headers
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers', 'Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
