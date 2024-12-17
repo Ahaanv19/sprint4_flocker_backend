@@ -4,10 +4,26 @@ import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-CORS(app)
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
+
+# Configure CORS to allow requests from your frontend
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5000", "supports_credentials": True}})
+
+# Handle preflight requests
+@app.before_request
+def handle_options_requests():
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        headers = response.headers
+
+        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
+        headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        headers['Access-Control-Allow-Credentials'] = 'true'
+
+        return response
 
 # Define a route for the root URL
 @app.route('/')
