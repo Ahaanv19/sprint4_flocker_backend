@@ -21,7 +21,7 @@ def handle_options_requests():
 
         headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
         headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, x-api-key, Accept, Origin, X-Requested-With'
         headers['Access-Control-Allow-Credentials'] = 'true'
 
         return response
