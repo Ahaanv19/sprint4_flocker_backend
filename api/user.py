@@ -5,7 +5,7 @@ from datetime import datetime
 from __init__ import app
 from api.jwt_authorize import token_required
 from model.user import User
-from model.github import GitHubUser
+from model.user import GitHubUser
 
 user_api = Blueprint('user_api', __name__,
                    url_prefix='/api')
