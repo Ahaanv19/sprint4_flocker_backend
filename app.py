@@ -77,6 +77,12 @@ def add_book():
     books.append(new_book)
     return jsonify({"message": "Book added successfully!"}), 201
 
+# Define a route to get user ID
+@app.route('/api/id', methods=['GET'])
+def get_id():
+    user_id = {"id": 123}  # Example static ID, replace with actual logic if needed
+    return jsonify(user_id)
+
 staticData = ["data point 1", "data point 2", "data point 3"]
 
 @app.route('/api/staticData', methods=['GET'])
