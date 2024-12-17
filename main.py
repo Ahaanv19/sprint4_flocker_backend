@@ -15,7 +15,6 @@ import shutil
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
 # API endpoints
-from api.user import user_api 
 from api.pfp import pfp_api
 from api.nestImg import nestImg_api # Justin added this, custom format for his website
 from api.post import post_api
@@ -58,7 +57,6 @@ app.register_blueprint(car_api)
 app.register_blueprint(ahaan_api)
 app.register_blueprint(student_api)
 app.register_blueprint(preferences_api)
-app.register_blueprint(user_api, url_prefix='/api')
 app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
 
