@@ -2,15 +2,16 @@
 import json
 import os
 from urllib.parse import urljoin, urlparse
-from flask import abort, redirect, render_template, request, send_from_directory, url_for, jsonify  # import render_template from "public" flask libraries
+from flask import abort, redirect, render_template, request, send_from_directory, url_for, jsonify, session  # import render_template from "public" flask libraries
 from flask_login import current_user, login_user, logout_user
 from flask.cli import AppGroup
 from flask_login import current_user, login_required
 from flask import current_app
 from werkzeug.security import generate_password_hash
 import shutil
-
-
+from flask_cors import CORS
+from flask_httpauth import HTTPBasicAuth
+from dotenv import load_dotenv
 
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
@@ -83,6 +84,42 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
+
+# Configure CORS to allow requests from your frontend
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887", "supports_credentials": True}})
+
+# Initialize HTTP Basic Authentication
+auth = HTTPBasicAuth()
+
+# Define users and passwords
+users = {
+    os.getenv('ADMIN_USER'): os.getenv('ADMIN_PASSWORD'),
+    os.getenv('DEFAULT_USER'): os.getenv('DEFAULT_PASSWORD')
+}
+
+# Verify password
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and users[username] == password:
+        return username
+    return None
+
+# Handle preflight requests
+@app.before_request
+def handle_options_requests():
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        headers = response.headers
+
+        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:4887'
+        headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        headers['Access-Control-Allow-Credentials'] = 'true'
+
+        return response
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
