@@ -11,7 +11,7 @@ app.secret_key = os.urandom(24)  # Secret key for session management
 load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
 
 # Configure CORS to allow requests from your frontend
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5000", "supports_credentials": True}})
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887", "supports_credentials": True}})
 
 # Initialize HTTP Basic Authentication
 auth = HTTPBasicAuth()
@@ -36,7 +36,7 @@ def handle_options_requests():
         response = app.make_default_options_response()
         headers = response.headers
 
-        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
+        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:4887'
         headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
         headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, x-api-key, Accept, Origin, X-Requested-With'
         headers['Access-Control-Allow-Credentials'] = 'true'
