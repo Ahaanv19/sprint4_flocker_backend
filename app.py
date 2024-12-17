@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # Secret key for session management
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
@@ -42,9 +43,16 @@ def login():
     default_password = os.getenv('DEFAULT_PASSWORD')
 
     if (username == admin_user and password == admin_password) or (username == default_user and password == default_password):
+        session['username'] = username
         return jsonify({'message': 'Login successful'})
     else:
         return jsonify({'message': 'Invalid username or password'}), 401
+
+# Define a logout route
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('username', None)
+    return jsonify({'message': 'Logout successful'})
 
 # User information endpoint
 @app.route('/api/user', methods=['GET'])
@@ -80,8 +88,11 @@ def add_book():
 # Define a route to get user ID
 @app.route('/api/id', methods=['GET'])
 def get_id():
-    user_id = {"id": 123}  # Example static ID, replace with actual logic if needed
-    return jsonify(user_id)
+    if 'username' in session:
+        user_id = {"id": 123}  # Example static ID, replace with actual logic if needed
+        return jsonify(user_id)
+    else:
+        return jsonify({'message': 'Unauthorized'}), 401
 
 staticData = ["data point 1", "data point 2", "data point 3"]
 
