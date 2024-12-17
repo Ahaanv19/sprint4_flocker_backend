@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, session
 from flask_cors import CORS
+from flask_httpauth import HTTPBasicAuth
 import os
 from dotenv import load_dotenv
 
@@ -10,7 +11,23 @@ app.secret_key = os.urandom(24)  # Secret key for session management
 load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
 
 # Configure CORS to allow requests from your frontend
-CORS(app, resources={r'*': {"origins": os.getenv('CORS_ORIGINS', 'http://127.0.0.1:5000'), "supports_credentials": True}})
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5000", "supports_credentials": True}})
+
+# Initialize HTTP Basic Authentication
+auth = HTTPBasicAuth()
+
+# Define users and passwords
+users = {
+    os.getenv('ADMIN_USER'): os.getenv('ADMIN_PASSWORD'),
+    os.getenv('DEFAULT_USER'): os.getenv('DEFAULT_PASSWORD')
+}
+
+# Verify password
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and users[username] == password:
+        return username
+    return None
 
 # Handle preflight requests
 @app.before_request
@@ -31,27 +48,15 @@ def handle_options_requests():
 def home():
     return 'Hello, World!'
 
-# Define a login route
-@app.route('/login', methods=['POST'])
+# Define a login route with Basic Authentication
+@app.route('/login', methods=['GET'])
+@auth.login_required
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-
-    admin_user = os.getenv('ADMIN_USER')
-    admin_password = os.getenv('ADMIN_PASSWORD')
-    default_user = os.getenv('DEFAULT_USER')
-    default_password = os.getenv('DEFAULT_PASSWORD')
-
-    if (username == admin_user and password == admin_password) or (username == default_user and password == default_password):
-        session['username'] = username
-        return jsonify({'message': 'Login successful'})
-    else:
-        return jsonify({'message': 'Invalid username or password'}), 401
+    return jsonify({'message': 'Login successful', 'user': auth.current_user()})
 
 # Define a logout route
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('username', None)
     return jsonify({'message': 'Logout successful'})
 
 # User information endpoint
@@ -87,15 +92,14 @@ def add_book():
 
 # Define a route to get user ID
 @app.route('/api/id', methods=['GET'])
+@auth.login_required
 def get_id():
-    if 'username' in session:
-        user_id = {"id": 123}  # Example static ID, replace with actual logic if needed
-        return jsonify(user_id)
-    else:
-        return jsonify({'message': 'Unauthorized'}), 401
+    user_id = {"id": 123}  # Example static ID, replace with actual logic if needed
+    return jsonify(user_id)
 
 # Define a route to get static data
 @app.route('/api/staticData', methods=['GET'])
+@auth.login_required
 def get_data():
     staticData = ["data point 1", "data point 2", "data point 3"]
     return jsonify(staticData)
