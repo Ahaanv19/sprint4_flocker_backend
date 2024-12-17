@@ -94,10 +94,10 @@ def get_id():
     else:
         return jsonify({'message': 'Unauthorized'}), 401
 
-staticData = ["data point 1", "data point 2", "data point 3"]
-
+# Define a route to get static data
 @app.route('/api/staticData', methods=['GET'])
 def get_data():
+    staticData = ["data point 1", "data point 2", "data point 3"]
     return jsonify(staticData)
 
 if __name__ == '__main__':
