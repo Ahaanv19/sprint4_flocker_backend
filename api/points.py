@@ -3,29 +3,28 @@ from flask_cors import cross_origin
 
 points_api = Blueprint('points_api', __name__)
 
-points = 10
+points = 100  # Starting points
 
-# Route for Preferences info (GET)
+# Route to get points (GET)
 @points_api.route('/api/points', methods=['GET'])
 @cross_origin()  # Allow CORS for this route
 def get_points():
     return jsonify({"points": points})
 
-# Route to update Preferences (POST)
+# Route to update points (POST)
 @points_api.route('/api/points', methods=['POST'])
 @cross_origin()  # Allow CORS for this route
 def update_points():
-    # Check if the request contains JSON
+    global points
     if request.is_json:
-        # Get the new points data from the JSON body
         data = request.get_json()
-
-        # Check if the data contains 'points' to update
         if 'points' in data:
-            global points  # Declare 'points' as global to modify it
-            points = data['points']  # Update the points with the new value
+            points = data['points']  # Update points with the new value
             return jsonify({"points": points}), 200
         else:
             return jsonify({"error": "Request must contain 'points'"}), 400
     else:
         return jsonify({"error": "Request must be in JSON format"}), 400
+
+if __name__ == '__main__':
+    points_api.run(debug=True, port=8887)
