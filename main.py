@@ -28,8 +28,7 @@ from api.carChat import car_chat_api
 from api.ahaan import ahaan_api
 from api.student import student_api
 from api.preferences import preferences_api
-from api.chat import chat_api
-from api.points import points_api 
+from api.chat import chat_api 
 
 from api.vote import vote_api
 # database Initialization functions
@@ -60,7 +59,6 @@ app.register_blueprint(student_api)
 app.register_blueprint(preferences_api)
 app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
-app.register_blueprint(points_api)
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
