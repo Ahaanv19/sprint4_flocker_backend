@@ -45,7 +45,7 @@ def get_arnav_info():
 def get_jacob_info():
     return jsonify({
         "name": "Jacob",
-        "age": 15,
+        "age": 16,
         "city": "San Diego",
         "hobbies": ["gaming", "sports", "cooking"]
     })
