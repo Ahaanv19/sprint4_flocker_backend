@@ -1,45 +1,46 @@
-from flask import Flask, Blueprint, request, jsonify
-from flask_cors import CORS
-import random
+import requests
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*", "supports_credentials": True}})
 
-ai_api = Blueprint('ai_api', __name__)
+# Your Google Books API Key
+API_KEY = 'AIzaSyBwiIaFOgmnzkOTD-HwegvolORp2rx1Lfk'
 
-# Predefined list of books
-books = [
-    {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
-    {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic"},
-    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
-    {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance"},
-    {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic"},
-    {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy"},
-    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy"},
-    {"title": "Moby Dick", "author": "Herman Melville", "genre": "Adventure"},
-    {"title": "War and Peace", "author": "Leo Tolstoy", "genre": "Historical"},
-    {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "genre": "Classic"}
-]
-
-# AI book recommendation endpoint
-@ai_api.route('/api/recommend', methods=['POST'])
-def recommend_books():
-    user_preferences = request.json.get('preferences', {})
-    genre_preference = user_preferences.get('genre', None)
+# Function to search books via Google Books API
+def search_books(query):
+    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&key={API_KEY}'
+    response = requests.get(url)
     
-    if genre_preference:
-        recommended_books = [book for book in books if book['genre'].lower() == genre_preference.lower()]
+    if response.status_code == 200:
+        return response.json()
     else:
-        recommended_books = books
+        return {"error": "Could not fetch data from Google Books API"}
+
+# Endpoint to get book recommendations
+@app.route('/recommendations', methods=['GET'])
+def recommendations():
+    # Get the genre or query from the user
+    genre = request.args.get('genre', 'programming')  # Default to 'programming' if no genre is provided
     
-    # Randomly select 3 books from the recommended list
-    recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
+    # Call the function to fetch books
+    books_data = search_books(genre)
+    
+    # Process the response and return relevant details
+    recommendations = []
+    if 'items' in books_data:
+        for item in books_data['items']:
+            book_info = item['volumeInfo']
+            book = {
+                "title": book_info.get("title"),
+                "authors": book_info.get("authors", []),
+                "description": book_info.get("description", "No description available"),
+                "rating": book_info.get("averageRating", "No rating"),
+                "thumbnail": book_info.get("imageLinks", {}).get("thumbnail", ""),
+                "infoLink": book_info.get("infoLink")
+            }
+            recommendations.append(book)
     
     return jsonify(recommendations)
 
-# Register the blueprint with the Flask app
-app.register_blueprint(ai_api)
-
-# Run the Flask app
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=4444)
+if __name__ == '__main__':
+    app.run(debug=True)
