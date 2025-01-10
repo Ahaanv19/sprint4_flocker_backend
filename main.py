@@ -63,6 +63,9 @@ app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(points_api)
 
+
+CORS(app)
+
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
 
