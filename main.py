@@ -9,7 +9,8 @@ from flask_login import current_user, login_required
 from flask import current_app
 from werkzeug.security import generate_password_hash
 import shutil
-
+from flask import Flask, request, jsonify
+from flask_cors import CORS 
 
 
 # import "objects" from "this" project
