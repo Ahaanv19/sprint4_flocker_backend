@@ -31,6 +31,7 @@ from api.student import student_api
 from api.preferences import preferences_api
 from api.chat import chat_api
 from api.points import points_api 
+from api.newQuizCreation import quizCreation_api
 
 from api.vote import vote_api
 # database Initialization functions
@@ -62,6 +63,7 @@ app.register_blueprint(preferences_api)
 app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(points_api)
+app.register_blueprint(quizCreation_api)
 
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
