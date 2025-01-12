@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "title": "Pride and Prejudice"
+    },
+    {
+        "id": 2,
+        "title": "To Kill a Mockingbird"
+    },
+    {
+        "id": 3,
+        "title": "The Great Gatsby"
+    },
+    {
+        "id": 4,
+        "title": "1984"
+    },
+    {
+        "id": 5,
+        "title": "The Catcher in the Rye"
+    },
+    {
+        "id": 6,
+        "title": "The Lord of the Rings"
+    },
+    {
+        "id": 7,
+        "title": "The Shawshank Redemption" 
+    },
+    {
+        "id": 8,
+        "title": "The Fault in Our Stars"
+    },
+    {
+        "id": 9,
+        "title": "Harry Potter and the Sorcerer's Stone"
+    },
+    {
+        "id": 10,
+        "title": "The Silence of the Lambs" 
+    }
+]
