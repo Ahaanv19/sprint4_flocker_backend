@@ -2,21 +2,20 @@
 import json
 import os
 from urllib.parse import urljoin, urlparse
-from flask import abort, redirect, render_template, request, send_from_directory, url_for, jsonify, session  # import render_template from "public" flask libraries
+from flask import abort, redirect, render_template, request, send_from_directory, url_for, jsonify  # import render_template from "public" flask libraries
 from flask_login import current_user, login_user, logout_user
 from flask.cli import AppGroup
 from flask_login import current_user, login_required
 from flask import current_app
 from werkzeug.security import generate_password_hash
 import shutil
-from flask_cors import CORS
-from flask_httpauth import HTTPBasicAuth
-from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from flask_cors import CORS 
+
 
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
 # API endpoints
-from api.user import user_api 
 from api.pfp import pfp_api
 from api.nestImg import nestImg_api # Justin added this, custom format for his website
 from api.post import post_api
@@ -33,46 +32,41 @@ from api.preferences import preferences_api
 from api.chat import chat_api
 from api.points import points_api 
 from api.newQuizCreation import quizCreation_api
+
 from api.vote import vote_api
+# database Initialization functions
+from model.carChat import CarChat
+from model.user import User, initUsers
+from model.section import Section, initSections
+from model.group import Group, initGroups
+from model.channel import Channel, initChannels
+from model.post import Post, initPosts
+from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
+from model.vote import Vote, initVotes
+# server only Views
 
-# Import initialization functio
-app.secret_key = os.urandom(24)  # Secret key for session management
+# register URIs for api endpoints
+app.register_blueprint(messages_api) # Adi added this, messages for his website
+app.register_blueprint(pfp_api) 
+app.register_blueprint(channel_api)
+app.register_blueprint(group_api)
+app.register_blueprint(section_api)
+app.register_blueprint(car_chat_api)
+# Added new files to create nestPosts, uses a different format than Mortensen and didn't want to touch his junk
+app.register_blueprint(nestPost_api)
+app.register_blueprint(nestImg_api)
+app.register_blueprint(vote_api)
+app.register_blueprint(car_api)
+app.register_blueprint(ahaan_api)
+app.register_blueprint(student_api)
+app.register_blueprint(preferences_api)
+app.register_blueprint(post_api, url_prefix='/api')
+app.register_blueprint(chat_api, url_prefix='/api')
+app.register_blueprint(points_api)
+app.register_blueprint(quizCreation_api)
 
-# Load environment variables from .env file
-load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
 
-# Configure CORS to allow requests from your frontend
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887", "supports_credentials": True}})
-
-# Initialize HTTP Basic Authentication
-auth = HTTPBasicAuth()
-
-# Define users and passwords
-users = {
-    os.getenv('ADMIN_USER'): os.getenv('ADMIN_PASSWORD'),
-    os.getenv('DEFAULT_USER'): os.getenv('DEFAULT_PASSWORD')
-}
-
-# Verify password
-@auth.verify_password
-def verify_password(username, password):
-    if username in users and users[username] == password:
-        return username
-    return None
-
-# Handle preflight requests
-@app.before_request
-def handle_options_requests():
-    if request.method == 'OPTIONS':
-        response = app.make_default_options_response()
-        headers = response.headers
-
-        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:4887'
-        headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-        headers['Access-Control-Allow-Credentials'] = 'true'
-
-        return response
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
@@ -248,6 +242,5 @@ app.cli.add_command(custom_cli)
         
 # this runs the flask application on the development server
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8887)
-
-
+    # change name for testing
+    app.run(debug=True, host="0.0.0.0", port="8887")
