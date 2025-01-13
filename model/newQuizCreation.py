@@ -1,6 +1,7 @@
 from sqlite3 import IntegrityError
 from sqlalchemy.exc import SQLAlchemyError
 from __init__ import app, db
+from sqlalchemy import inspect  # Ensure we import inspect for table name retrieval
 
 class QuizCreation(db.Model):
     """
@@ -13,7 +14,7 @@ class QuizCreation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(255), nullable=False)
     answer = db.Column(db.String(255), nullable=False)
-    quiz_id = db.Column(db.Integer, nullable=False)  # Remove ForeignKey for simplicity in SQLite
+    quiz_id = db.Column(db.Integer, nullable=False)  # Consider ForeignKey if this links to another table
 
     def __init__(self, question, answer, quiz_id):
         """
@@ -38,7 +39,7 @@ class QuizCreation(db.Model):
             db.session.commit()
         except SQLAlchemyError as e:
             db.session.rollback()
-            raise e
+            raise ValueError(f"Error creating quiz: {str(e)}")
 
     def read(self):
         """
@@ -55,6 +56,8 @@ class QuizCreation(db.Model):
         """
         Updates the quiz with new data and commits the changes.
         """
+        if not self:
+            raise ValueError("Quiz does not exist.")
         for key, value in data.items():
             if hasattr(self, key):
                 setattr(self, key, value)
@@ -62,18 +65,20 @@ class QuizCreation(db.Model):
             db.session.commit()
         except SQLAlchemyError as e:
             db.session.rollback()
-            raise e
+            raise ValueError(f"Error updating quiz: {str(e)}")
 
     def delete(self):
         """
         Deletes the quiz from the database and commits the transaction.
         """
+        if not self:
+            raise ValueError("Quiz does not exist.")
         try:
             db.session.delete(self)
             db.session.commit()
         except SQLAlchemyError as e:
             db.session.rollback()
-            raise e
+            raise ValueError(f"Error deleting quiz: {str(e)}")
 
 
 def initQuizCreation():
@@ -81,7 +86,12 @@ def initQuizCreation():
     Initializes the QuizCreation table and inserts test data for development purposes.
     """
     with app.app_context():
-        db.create_all()  # Create the database and tables
+        # Create the database and tables
+        db.create_all()
+        
+        # Use the inspector to get table names
+        inspector = inspect(db.engine)
+        print(f"Tables created: {inspector.get_table_names()}")  # Debug message
 
         # Sample test data
         quizzes = [
@@ -97,3 +107,5 @@ def initQuizCreation():
             except IntegrityError:
                 db.session.rollback()
                 print(f"Record already exists or error occurred: {quiz}")
+
+
