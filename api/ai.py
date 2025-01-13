@@ -1,46 +1,35 @@
-import requests
-from flask import Flask, jsonify, request
+from flask import Blueprint, jsonify, request
+import random
 
-app = Flask(__name__)
+ai_api = Blueprint('ai_api', __name__)
 
-# Your Google Books API Key
-API_KEY = 'AIzaSyBwiIaFOgmnzkOTD-HwegvolORp2rx1Lfk'
-
-# Function to search books via Google Books API
-def search_books(query):
-    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&key={API_KEY}'
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return {"error": "Could not fetch data from Google Books API"}
+# Predefined list of books
+books = [
+    {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
+    {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic"},
+    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
+    {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance"},
+    {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic"},
+    {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy"},
+    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy"},
+    {"title": "Moby Dick", "author": "Herman Melville", "genre": "Adventure"},
+    {"title": "War and Peace", "author": "Leo Tolstoy", "genre": "Historical"},
+    {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "genre": "Classic"}
+]
 
 # Endpoint to get book recommendations
-@app.route('/recommendations', methods=['GET'])
+@ai_api.route('/recommendations', methods=['GET'])
 def recommendations():
     # Get the genre or query from the user
-    genre = request.args.get('genre', 'programming')  # Default to 'programming' if no genre is provided
+    genre = request.args.get('genre', None)
     
-    # Call the function to fetch books
-    books_data = search_books(genre)
+    # Filter books based on the genre
+    if genre:
+        recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
+    else:
+        recommended_books = books
     
-    # Process the response and return relevant details
-    recommendations = []
-    if 'items' in books_data:
-        for item in books_data['items']:
-            book_info = item['volumeInfo']
-            book = {
-                "title": book_info.get("title"),
-                "authors": book_info.get("authors", []),
-                "description": book_info.get("description", "No description available"),
-                "rating": book_info.get("averageRating", "No rating"),
-                "thumbnail": book_info.get("imageLinks", {}).get("thumbnail", ""),
-                "infoLink": book_info.get("infoLink")
-            }
-            recommendations.append(book)
+    # Randomly select up to 3 books from the recommended list
+    recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
     
     return jsonify(recommendations)
-
-if __name__ == '__main__':
-    app.run(debug=True)
