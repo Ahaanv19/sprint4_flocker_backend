@@ -1,15 +1,19 @@
 from flask import Flask, Blueprint, jsonify, request
 import random
 from flask_cors import cross_origin
+import json
+import os
+from flask import Blueprint, jsonify, request
+from flask_cors import CORS
 
 
 ai_api = Blueprint('ai_api', __name__)
-
+CORS(ai_api)
 # Predefined list of books
 books = [
     {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
     {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic"},
-    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
+    {"title": "2000", "author": "George Orwell", "genre": "Dystopian"},
     {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance"},
     {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic"},
     {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy"},
