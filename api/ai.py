@@ -1,9 +1,8 @@
-import logging
 from flask import Flask, Blueprint, jsonify, request
 import random
 from flask_cors import cross_origin
 
-# Initialize app and blueprint
+# Initialize the Flask app and Blueprint
 app = Flask(__name__)
 ai_api = Blueprint('ai_api', __name__)
 
@@ -25,24 +24,27 @@ books = [
 @ai_api.route('/recommendations', methods=['GET'])
 @cross_origin()  # Allow cross-origin requests
 def recommendations():
-    genre = request.args.get('genre', None)
+    genre = request.args.get('genre', None)  # Get genre from query parameter
 
-    # Add logging to check if genre is being received correctly
+    # Debug logging to see the received genre
     app.logger.debug(f"Received genre: {genre}")
 
+    # If genre is provided, filter books by genre
     if genre:
         recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
         app.logger.debug(f"Filtered books by genre '{genre}': {recommended_books}")
     else:
+        # If no genre is provided, return all books
         recommended_books = books
-        app.logger.debug(f"No genre filter applied, all books: {recommended_books}")
-    
-    # Randomly select up to 3 books from the recommended list
+        app.logger.debug("No genre filter applied, returning all books.")
+
+    # Randomly select up to 3 books from the filtered list
     recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
     
-    # Log the final recommendations
+    # Debug logging to see the final list of recommendations
     app.logger.debug(f"Final recommendations: {recommendations}")
-    
+
+    # Return the recommendations as JSON
     return jsonify(recommendations)
 
 # Register blueprint with prefix '/api'
@@ -50,6 +52,6 @@ app.register_blueprint(ai_api, url_prefix='/api')
 
 # Running on port 8887
 if __name__ == '__main__':
-    # Set logging level to debug to see the logs in the terminal
+    # Set logging level to debug to show logs in the terminal
     app.debug = True
     app.run(debug=True, port=8887)
