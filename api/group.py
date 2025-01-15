@@ -6,7 +6,7 @@ from __init__ import app
 from api.jwt_authorize import token_required
 from model.group import Group
 from model.user import User
-from model.section import Section
+from model.mod import Section
 
 group_api = Blueprint('group_api', __name__, url_prefix='/api')
 

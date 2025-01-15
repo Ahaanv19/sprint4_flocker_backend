@@ -2,7 +2,7 @@
 # group.py
 from sqlite3 import IntegrityError
 from __init__ import app, db
-from model.section import Section
+from model.mod import Section
 from model.user import User
 
 # Association table for the many-to-many relationship between Group and User (moderators)

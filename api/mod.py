@@ -4,7 +4,7 @@ from flask_restful import Api, Resource  # used for REST API building
 from datetime import datetime
 from __init__ import app
 from api.jwt_authorize import token_required
-from model.section import Section
+from model.mod import Section
 
 """
 This Blueprint object is used to define APIs for the Section model.

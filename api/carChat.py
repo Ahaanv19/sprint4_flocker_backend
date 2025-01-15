@@ -6,7 +6,7 @@ from __init__ import app
 from api.jwt_authorize import token_required
 from model.carChat import CarChat
 from model.user import User
-from model.section import Section
+from model.mod import Section
 
 # """
 # This Blueprint object is used to define APIs for the Group model.
