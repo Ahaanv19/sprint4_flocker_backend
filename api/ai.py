@@ -25,31 +25,20 @@ books = [
 
 # Endpoint to get book recommendations
 @ai_api.route('/recommendations', methods=['GET'])
-@cross_origin()  # Allow cross-origin requests
 def recommendations():
-    genre = request.args.get('genre', None)  # Get genre from query parameter
-
-    # Debug logging to see the received genre
-    ai_api.logger.debug(f"Received genre: {genre}")
-
-    # If genre is provided, filter books by genre
+    # Get the genre or query from the user
+    genre = request.args.get('genre', None)
+    
+    # Filter books based on the genre
     if genre:
         recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
-        ai_api.logger.debug(f"Filtered books by genre '{genre}': {recommended_books}")
     else:
-        # If no genre is provided, return all books
         recommended_books = books
-        ai_api.logger.debug("No genre filter applied, returning all books.")
-
-    # Randomly select up to 3 books from the filtered list
+    
+    # Randomly select up to 3 books from the recommended list
     recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
     
-    # Debug logging to see the final list of recommendations
-    ai_api.logger.debug(f"Final recommendations: {recommendations}")
-
-    # Return the recommendations as JSON
     return jsonify(recommendations)
-
 
 
 # Running on port 8887

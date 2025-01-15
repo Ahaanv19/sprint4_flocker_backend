@@ -34,6 +34,7 @@ from api.points import points_api
 from api.newQuizCreation import quizCreation_api
 from api.bookadaptation import bookadaptation_api
 
+from api.ai import ai_api 
 from api.vote import vote_api
 # database Initialization functions
 from model.carChat import CarChat
@@ -243,5 +244,4 @@ app.cli.add_command(custom_cli)
         
 # this runs the flask application on the development server
 if __name__ == "__main__":
-    # change name for testing
-    app.run(debug=True, host="0.0.0.0", port="8887")
+    app.run(debug=True, host="0.0.0.0", port=8887)
