@@ -3,7 +3,7 @@ from sqlite3 import IntegrityError
 from sqlalchemy import Text
 from __init__ import app, db
 from model.user import User
-from model.newBookFun import Group
+from model.group import Group
 
 class NestPost(db.Model):
     """

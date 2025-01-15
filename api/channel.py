@@ -5,7 +5,7 @@ from datetime import datetime
 from __init__ import app
 from api.jwt_authorize import token_required
 from model.channel import Channel
-from model.newBookFun import Group
+from model.group import Group
 from model.user import User
 
 """
