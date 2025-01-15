@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, Blueprint, jsonify, request
 import random
 from flask_cors import cross_origin
@@ -25,18 +26,30 @@ books = [
 @cross_origin()  # Allow cross-origin requests
 def recommendations():
     genre = request.args.get('genre', None)
-    
+
+    # Add logging to check if genre is being received correctly
+    app.logger.debug(f"Received genre: {genre}")
+
     if genre:
         recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
+        app.logger.debug(f"Filtered books by genre '{genre}': {recommended_books}")
     else:
         recommended_books = books
+        app.logger.debug(f"No genre filter applied, all books: {recommended_books}")
     
+    # Randomly select up to 3 books from the recommended list
     recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
+    
+    # Log the final recommendations
+    app.logger.debug(f"Final recommendations: {recommendations}")
     
     return jsonify(recommendations)
 
 # Register blueprint with prefix '/api'
 app.register_blueprint(ai_api, url_prefix='/api')
 
+# Running on port 8887
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Set logging level to debug to see the logs in the terminal
+    app.debug = True
+    app.run(debug=True, port=8887)
