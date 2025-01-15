@@ -2,8 +2,7 @@ from flask import Flask, Blueprint, jsonify, request
 import random
 from flask_cors import cross_origin
 
-# Initialize the Flask app and Blueprint
-app = Flask(__name__)
+
 ai_api = Blueprint('ai_api', __name__)
 
 # Predefined list of books
@@ -27,31 +26,31 @@ def recommendations():
     genre = request.args.get('genre', None)  # Get genre from query parameter
 
     # Debug logging to see the received genre
-    app.logger.debug(f"Received genre: {genre}")
+    ai_api.logger.debug(f"Received genre: {genre}")
 
     # If genre is provided, filter books by genre
     if genre:
         recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
-        app.logger.debug(f"Filtered books by genre '{genre}': {recommended_books}")
+        ai_api.logger.debug(f"Filtered books by genre '{genre}': {recommended_books}")
     else:
         # If no genre is provided, return all books
         recommended_books = books
-        app.logger.debug("No genre filter applied, returning all books.")
+        ai_api.logger.debug("No genre filter applied, returning all books.")
 
     # Randomly select up to 3 books from the filtered list
     recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
     
     # Debug logging to see the final list of recommendations
-    app.logger.debug(f"Final recommendations: {recommendations}")
+    ai_api.logger.debug(f"Final recommendations: {recommendations}")
 
     # Return the recommendations as JSON
     return jsonify(recommendations)
 
 # Register blueprint with prefix '/api'
-app.register_blueprint(ai_api, url_prefix='/api')
+ai_api.register_blueprint(ai_api, url_prefix='/api')
 
 # Running on port 8887
 if __name__ == '__main__':
     # Set logging level to debug to show logs in the terminal
-    app.debug = True
-    app.run(debug=True, port=8887)
+    ai_api.debug = True
+    ai_api.run(debug=True, port=8887)
