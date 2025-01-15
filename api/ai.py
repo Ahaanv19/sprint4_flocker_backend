@@ -46,11 +46,9 @@ def recommendations():
     # Return the recommendations as JSON
     return jsonify(recommendations)
 
-# Register blueprint with prefix '/api'
-ai_api.register_blueprint(ai_api, url_prefix='/api')
+
 
 # Running on port 8887
 if __name__ == '__main__':
     # Set logging level to debug to show logs in the terminal
-    ai_api.debug = True
     ai_api.run(debug=True, port=8887)
