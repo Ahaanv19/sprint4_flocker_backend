@@ -13,7 +13,7 @@ CORS(ai_api)
 books = [
     {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
     {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic"},
-    {"title": "2000", "author": "George Orwell", "genre": "Dystopian"},
+    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
     {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance"},
     {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic"},
     {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy"},
