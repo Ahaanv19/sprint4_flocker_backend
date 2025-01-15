@@ -20,7 +20,7 @@ from api.pfp import pfp_api
 from api.nestImg import nestImg_api # Justin added this, custom format for his website
 from api.post import post_api
 from api.channel import channel_api
-from api.group import group_api
+from api.newBookFun import group_api
 from api.section import section_api
 from api.nestPost import nestPost_api # Justin added this, custom format for his website
 from api.messages_api import messages_api # Adi added this, messages for his website
@@ -40,7 +40,7 @@ from api.vote import vote_api
 from model.carChat import CarChat
 from model.user import User, initUsers
 from model.section import Section, initSections
-from model.group import Group, initGroups
+from model.newBookFun import Group, initGroups
 from model.channel import Channel, initChannels
 from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website

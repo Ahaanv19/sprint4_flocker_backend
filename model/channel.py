@@ -2,7 +2,7 @@
 from sqlite3 import IntegrityError
 from sqlalchemy import Text, JSON
 from __init__ import app, db
-from model.group import Group
+from model.newBookFun import Group
 
 class Channel(db.Model):
     """
