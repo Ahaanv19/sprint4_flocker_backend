@@ -1,4 +1,4 @@
-from model.QuizCreation import initQuizCreation
+from model.usersDb import initUserCreation
 
 if __name__ == "__main__":
-    initQuizCreation()
+    initUserCreation()
