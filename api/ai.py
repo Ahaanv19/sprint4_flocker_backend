@@ -9,6 +9,7 @@ from flask_cors import CORS
 
 ai_api = Blueprint('ai_api', __name__)
 CORS(ai_api)
+
 # Predefined list of books
 books = [
     {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
@@ -22,6 +23,11 @@ books = [
     {"title": "War and Peace", "author": "Leo Tolstoy", "genre": "Historical"},
     {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "genre": "Classic"}
 ]
+
+@ai_api.route("/check", methods=["GET"])
+@cross_origin() 
+def home():
+    return "Welcome to the AI API!"
 
 # Endpoint to get book recommendations
 @ai_api.route('/recommendations', methods=['GET'])

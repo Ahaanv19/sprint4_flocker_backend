@@ -33,6 +33,7 @@ from api.chat import chat_api
 from api.points import points_api 
 from api.newQuizCreation import quizCreation_api
 from api.bookadaptation import bookadaptation_api
+from api.ai import ai_api
 
 from api.ai import ai_api 
 from api.vote import vote_api
@@ -67,6 +68,7 @@ app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(points_api)
 app.register_blueprint(quizCreation_api)
 app.register_blueprint(bookadaptation_api)
+app.register_blueprint(ai_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
