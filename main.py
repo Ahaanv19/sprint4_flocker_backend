@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash
 import shutil
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
-
+from dotenv import load_dotenv
 
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
@@ -66,6 +66,12 @@ app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(points_api)
 app.register_blueprint(quizCreation_api)
 app.register_blueprint(bookadaptation_api)
+app.register_blueprint(recomendations_api, url_prefix='/api')
+
+app.secret_key = os.urandom(24)  # Secret key for session management
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
