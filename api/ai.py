@@ -7,41 +7,32 @@ from flask import Blueprint, jsonify, request
 from flask_cors import CORS
 
 
-ai_api = Blueprint('ai_api', __name__)
-CORS(ai_api)
-# Predefined list of books
-books = [
-    {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
-    {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic"},
-    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
-    {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance"},
-    {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic"},
-    {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy"},
-    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy"},
-    {"title": "Moby Dick", "author": "Herman Melville", "genre": "Adventure"},
-    {"title": "War and Peace", "author": "Leo Tolstoy", "genre": "Historical"},
-    {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "genre": "Classic"}
-]
-
-# Endpoint to get book recommendations
-@ai_api.route('/recommendations', methods=['GET'])
-def recommendations():
-    # Get the genre or query from the user
-    genre = request.args.get('genre', None)
-    
-    # Filter books based on the genre
-    if genre:
-        recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
-    else:
-        recommended_books = books
-    
-    # Randomly select up to 3 books from the recommended list
-    recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
-    
-    return jsonify(recommendations)
+recomendations_api = Blueprint('ai_api', __name__)
+CORS(recomendations_api)
 
 
+@recomendations_api.route('/', methods=['GET']) ##test if the server is running correctly
+@cross_origin() 
+def home():
+    return "Welcome to the Book Recomendations API!"
+
+def load_books(): ##function to load the books from the json file (books.json)
+    try:
+        with open('books.json') as f:
+            return json.load(f)
+    except FileNotFoundError: ##if the file is not found return an error message
+        return [], "File not found."
+    except json.JSONDecodeError: 
+        return [], "Error decoding JSON."
+    
+@recomendations_api.route('/recomendations', methods=['GET']) ##get all the books
+@cross_origin() 
+def get_books():
+    books = load_books()
+    return jsonify(books)
+    
+   
 # Running on port 8887
 if __name__ == '__main__':
     # Set logging level to debug to show logs in the terminal
-    ai_api.run(debug=True, port=8887)
+    recomendations_api.run(debug=True, port=8887)
