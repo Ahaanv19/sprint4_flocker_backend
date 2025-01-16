@@ -12,7 +12,7 @@ book_file_path = os.path.join(os.path.dirname(__file__), '../Books.json')
 def load_books():
     try:
         with open(book_file_path) as f:
-            return json.load(f)
+            return json.load(f), None
     except FileNotFoundError:
         return {}, "File not found."
     except json.JSONDecodeError:
