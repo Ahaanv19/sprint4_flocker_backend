@@ -33,7 +33,7 @@ from api.preferences import preferences_api
 from api.chat import chat_api
 from api.points import points_api 
 from api.newQuizCreation import quizCreation_api
-from api.bookadaptation import bookadaptation_api
+from api.bookadaptation import bookadaptation_api  # Import the Book Adaptation API
 from api.vote import vote_api
 # database Initialization functions
 from model.carChat import CarChat
@@ -65,8 +65,8 @@ app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(points_api)
 app.register_blueprint(quizCreation_api)
-app.register_blueprint(bookadaptation_api)
-app.register_blueprint(recomendations_api, url_prefix='/api')
+app.register_blueprint(bookadaptation_api, url_prefix='/api/bookadaptation')  # Register the Book Adaptation API
+app.register_blueprint(recomendations_api, url_prefix='/api/recommendations')  # Register the Book Recommendations API
 
 app.secret_key = os.urandom(24)  # Secret key for session management
 
