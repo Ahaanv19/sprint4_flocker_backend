@@ -73,7 +73,8 @@ app.secret_key = os.urandom(24)  # Secret key for session management
 # Load environment variables from .env file
 load_dotenv(dotenv_path='/Users/jacobzierolf/nighthawk/sprint4_flocker_backend/password.env')
 
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
+# Configure CORS to allow requests from your frontend
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887", "supports_credentials": True}})
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
