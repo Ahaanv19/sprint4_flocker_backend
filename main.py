@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
 # API endpoints
-from api.recommendations import recomendations_api
+from api.recommendations import recommendations_api
 from api.pfp import pfp_api
 from api.nestImg import nestImg_api # Justin added this, custom format for his website
 from api.post import post_api
@@ -66,7 +66,7 @@ app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(points_api)
 app.register_blueprint(quizCreation_api)
 app.register_blueprint(bookadaptation_api, url_prefix='/api/bookadaptation')  # Register the Book Adaptation API
-app.register_blueprint(recomendations_api, url_prefix='/api/recommendations')  # Register the Book Recommendations API
+app.register_blueprint(recommendations_api, url_prefix='/api/recommendations')  # Register the Book Recommendations API
 
 app.secret_key = os.urandom(24)  # Secret key for session management
 
