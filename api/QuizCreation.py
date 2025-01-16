@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from api.jwt_authorize import token_required
-from model.newQuizCreation import QuizCreation
+from model.QuizCreation import QuizCreation
 
 # Blueprint setup for the API
 quizCreation_api = Blueprint('quizCreation_api', __name__, url_prefix='/api')

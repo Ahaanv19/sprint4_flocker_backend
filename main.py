@@ -31,7 +31,7 @@ from api.student import student_api
 from api.preferences import preferences_api
 from api.chat import chat_api
 from api.points import points_api 
-from api.newQuizCreation import quizCreation_api
+from api.QuizCreation import quizCreation_api
 from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
