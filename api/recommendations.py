@@ -9,7 +9,7 @@ CORS(recommendations_api)
 
 # Load books from the Books.json file (relative path)
 book_file_path = os.path.join(os.path.dirname(__file__), '../Books.json')
-def load_recommendations():
+def load_books():
     try:
         with open(book_file_path) as f:
             return json.load(f)
@@ -27,18 +27,18 @@ def home():
 # Endpoint to get book recommendations based on genre or all books
 @recommendations_api.route('/recommendations', methods=['GET'])
 @cross_origin()
-def get_recommendations():
-    recommendations, error = load_recommendations()
+def get_books():
+    books, error = load_books()
     if error:
         return jsonify({"error": error}), 500
 
     genre = request.args.get('genre', None)
     
     # Filter books based on the genre
-    if genre and genre in recommendations:
-        recommended_books = recommendations[genre]
+    if genre and genre in books:
+        recommended_books = books[genre]
     else:
-        recommended_books = [book for genre_books in recommendations.values() for book in genre_books]
+        recommended_books = [book for genre_books in books.values() for book in genre_books]
     
     return jsonify(recommended_books)
     
