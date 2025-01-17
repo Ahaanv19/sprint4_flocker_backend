@@ -35,6 +35,7 @@ from api.usersDb import usersDb_api
 from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
+from api.bookadaptationsdb import newbook_api
 
 # database Initialization functions
 from model.carChat import CarChat
@@ -45,6 +46,7 @@ from model.channel import Channel, initChannels
 from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
+from model.bookadaptationsdb import NewBook, initBookAdaptations
 # server only Views
 
 # register URIs for api endpoints
@@ -68,6 +70,7 @@ app.register_blueprint(points_api)
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(ai_api)
+app.register_blueprint(newbook_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
