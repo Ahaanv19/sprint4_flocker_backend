@@ -1,61 +1,47 @@
-from flask import Flask, jsonify, request, session
-from flask_cors import CORS
-import os
-from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # To handle CORS errors
 
+# Initialize Flask app
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Secret key for session management
-# Define a route for the root URL
-@app.route('/')
-def home():
-    return 'Hello, World!'
 
-# User information endpoint
-@app.route('/api/user', methods=['GET'])
-def get_user_info():
-    user_info = {
-        "name": "Ahaan Vaidyanathan",
-        "age": 15,
-        "city": "San Diego",
-        "hobbies": ["Video Games", "Coding", "Modeling"]
-    }
-    return jsonify(user_info)
+# Allow all origins to make requests to this server
+CORS(app)
 
-# Pre-populated book list
-books = [
-    {"title": "The Hunger Games", "author": "Suzanne Collins"},
-    {"title": "To Kill a Mockingbird", "author": "Harper Lee"},
-    {"title": "1984", "author": "George Orwell"}
+# In-memory user data for simplicity (could be replaced with a database)
+users = [
+    {"id": 1, "name": "John Doe"},
+    {"id": 2, "name": "Jane Smith"}
 ]
 
-# Get all books
-@app.route('/api/books', methods=['GET'])
-def get_books():
-    return jsonify(books)
+# Route to fetch all users
+@app.route('/users', methods=['GET'])
+def get_users():
+    return jsonify(users)
 
-# Add a new book
-@app.route('/api/books', methods=['POST'])
-def add_book():
-    data = request.get_json()
-    new_book = {"title": data['title'], "author": data['author']}
-    books.append(new_book)
-    return jsonify({"message": "Book added successfully!"}), 201
+# Route to add a user
+@app.route('/users', methods=['POST'])
+def add_user():
+    new_user = request.get_json()  # Get the data from the request
+    if not new_user or 'name' not in new_user:
+        return jsonify({'error': 'Name is required'}), 400
 
-# Define a route to get user ID
-@app.route('/api/id', methods=['GET'])
-def get_id():
-    if 'username' in session:
-        user_id = {"id": 123}  # Example static ID, replace with actual logic if needed
-        return jsonify(user_id)
-    else:
-        return jsonify({'message': 'Unauthorized'}), 401
+    # Generate the next user ID
+    new_user['id'] = max(user['id'] for user in users) + 1
+    users.append(new_user)
+    return jsonify(new_user), 201
 
-# Define a route to get static data
-@app.route('/api/staticData', methods=['GET'])
-def get_data():
-    staticData = ["data point 1", "data point 2", "data point 3"]
-    return jsonify(staticData)
+# Route to delete a user
+@app.route('/users', methods=['DELETE'])
+def delete_user():
+    user_id = request.get_json().get("id")
+    if not user_id:
+        return jsonify({"error": "ID is required"}), 400
+    
+    global users
+    # Find and remove the user with the given ID
+    users = [user for user in users if user["id"] != user_id]
+    return jsonify({"message": f"User {user_id} deleted successfully"}), 200
 
+# Run the app on port 3000
 if __name__ == '__main__':
-    app.run(port=8887, debug=True)
-
+    app.run(debug=True, port=3000)
