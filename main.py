@@ -35,7 +35,7 @@ from api.usersDb import usersDb_api
 from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
-from api.bookadaptationsdb import newbook_api
+from api.bookadaptationsdb import books_api
 
 # database Initialization functions
 from model.carChat import CarChat
@@ -46,7 +46,7 @@ from model.channel import Channel, initChannels
 from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
-from model.bookadaptationsdb import NewBook, initBookAdaptations
+from model.bookadaptationsdb import Book, initBookAdaptations
 # server only Views
 
 # register URIs for api endpoints
@@ -70,7 +70,7 @@ app.register_blueprint(points_api)
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(ai_api)
-app.register_blueprint(newbook_api)
+app.register_blueprint(books_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
@@ -173,14 +173,46 @@ custom_cli = AppGroup('custom', help='Custom commands')
 # Define a command to run the data generation functions
 @custom_cli.command('generate_data')
 def generate_data():
-    initUsers()
-    initSections()
-    initGroups()
-    initChannels()
-    initPosts()
-    initNestPosts()
-    initVotes()
-    
+    try:
+        initUsers()
+    except Exception as e:
+        print(f"Error in initUsers: {e}")
+
+    try:
+        initSections()
+    except Exception as e:
+        print(f"Error in initSections: {e}")
+
+    try:
+        initGroups()
+    except Exception as e:
+        print(f"Error in initGroups: {e}")
+
+    try:
+        initChannels()
+    except Exception as e:
+        print(f"Error in initChannels: {e}")
+
+    try:
+        initPosts()
+    except Exception as e:
+        print(f"Error in initPosts: {e}")
+
+    try:
+        initNestPosts()
+    except Exception as e:
+        print(f"Error in initNestPosts: {e}")
+
+    try:
+        initVotes()
+    except Exception as e:
+        print(f"Error in initVotes: {e}")
+
+    try:
+        initBookAdaptations()
+    except Exception as e:
+        print(f"Error in initBookAdaptations: {e}")
+
 # Backup the old database
 def backup_database(db_uri, backup_uri):
     """Backup the current database."""
@@ -201,6 +233,7 @@ def extract_data():
         data['groups'] = [group.read() for group in Group.query.all()]
         data['channels'] = [channel.read() for channel in Channel.query.all()]
         data['posts'] = [post.read() for post in Post.query.all()]
+        data['books'] = [books.read() for books in Book.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -215,7 +248,7 @@ def save_data_to_json(data, directory='backup'):
 # Load data from JSON files
 def load_data_from_json(directory='backup'):
     data = {}
-    for table in ['users', 'sections', 'groups', 'channels', 'posts']:
+    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'books']:
         with open(os.path.join(directory, f'{table}.json'), 'r') as f:
             data[table] = json.load(f)
     return data
@@ -228,6 +261,7 @@ def restore_data(data):
         _ = Group.restore(data['groups'], users)
         _ = Channel.restore(data['channels'])
         _ = Post.restore(data['posts'])
+        _ = Book.restore(data['books'])
     print("Data restored to the new database.")
 
 # Define a command to backup data

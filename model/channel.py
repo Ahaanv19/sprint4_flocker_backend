@@ -146,111 +146,202 @@ def initChannels():
         IntegrityError: An error occurred when adding the tester data to the table.
     """
     with app.app_context():
-        """Create database and tables"""
+        # Create database and tables if they don't already exist
         db.create_all()
-        """Tester data for table"""
 
         # Home Page Channels
         general = Group.query.filter_by(_name='General').first()
         support = Group.query.filter_by(_name='Support').first()
-        home_page_channels = [
-            Channel(name='Announcements', group_id=general.id),
-            Channel(name='Events', group_id=general.id),
-            Channel(name='FAQ', group_id=support.id),
-            Channel(name='Help Desk', group_id=support.id)
-        ]
-        
-        # Shared Interest Channels 
-        limitless_connection = Group.query.filter_by(_name='Limitless Connections').first() 
-        dnhs_football = Group.query.filter_by(_name='DNHS Football').first() 
+
+        if not general:
+            print("Warning: 'General' group not found!")
+        if not support:
+            print("Warning: 'Support' group not found!")
+
+        home_page_channels = []
+        if general:
+            home_page_channels += [
+                Channel(name='Announcements', group_id=general.id),
+                Channel(name='Events', group_id=general.id)
+            ]
+        if support:
+            home_page_channels += [
+                Channel(name='FAQ', group_id=support.id),
+                Channel(name='Help Desk', group_id=support.id)
+            ]
+
+        # Shared Interest Channels
+        limitless_connection = Group.query.filter_by(_name='Limitless Connections').first()
+        dnhs_football = Group.query.filter_by(_name='DNHS Football').first()
         school_subjects = Group.query.filter_by(_name='School Subjects').first()
         music = Group.query.filter_by(_name='Music').first()
         satire = Group.query.filter_by(_name='Satire').first()
         activity_hub = Group.query.filter_by(_name='Activity Hub').first()
-        shared_interest_channels = [
-            Channel(name='Penpal Letters', group_id=limitless_connection.id),
-            Channel(name='Game vs Poway', group_id=dnhs_football.id),
-            Channel(name='Game vs Westview', group_id=dnhs_football.id),
-            Channel(name='Math', group_id=school_subjects.id),
-            Channel(name='English', group_id=school_subjects.id),
-            Channel(name='Artist', group_id=music.id),
-            Channel(name='Music Genre', group_id=music.id),
-            Channel(name='Humor', group_id=satire.id),
-            Channel(name='Memes', group_id=satire.id),
-            Channel(name='Irony', group_id=satire.id),
-            Channel(name='Cyber Patriots', group_id=activity_hub.id),
-            Channel(name='Robotics', group_id=activity_hub.id),
-        ]
-        
-        #P3 Channels Below
-         # Share and Care channels below:
+
+        if not limitless_connection:
+            print("Warning: 'Limitless Connections' group not found!")
+        if not dnhs_football:
+            print("Warning: 'DNHS Football' group not found!")
+        if not school_subjects:
+            print("Warning: 'School Subjects' group not found!")
+        if not music:
+            print("Warning: 'Music' group not found!")
+        if not satire:
+            print("Warning: 'Satire' group not found!")
+        if not activity_hub:
+            print("Warning: 'Activity Hub' group not found!")
+
+        shared_interest_channels = []
+        if limitless_connection:
+            shared_interest_channels.append(Channel(name='Penpal Letters', group_id=limitless_connection.id))
+        if dnhs_football:
+            shared_interest_channels += [
+                Channel(name='Game vs Poway', group_id=dnhs_football.id),
+                Channel(name='Game vs Westview', group_id=dnhs_football.id)
+            ]
+        if school_subjects:
+            shared_interest_channels += [
+                Channel(name='Math', group_id=school_subjects.id),
+                Channel(name='English', group_id=school_subjects.id)
+            ]
+        if music:
+            shared_interest_channels += [
+                Channel(name='Artist', group_id=music.id),
+                Channel(name='Music Genre', group_id=music.id)
+            ]
+        if satire:
+            shared_interest_channels += [
+                Channel(name='Humor', group_id=satire.id),
+                Channel(name='Memes', group_id=satire.id),
+                Channel(name='Irony', group_id=satire.id)
+            ]
+        if activity_hub:
+            shared_interest_channels += [
+                Channel(name='Cyber Patriots', group_id=activity_hub.id),
+                Channel(name='Robotics', group_id=activity_hub.id)
+            ]
+
+        # Share and Care Channels
         DNHSCafe = Group.query.filter_by(_name='Study Room').first()
         chess_forum = Group.query.filter_by(_name='Chess Forum').first()
         Underground_Music = Group.query.filter_by(_name='Underground Music').first()
-        share_and_care_channels = [
-            Channel(name='Math', group_id=DNHSCafe.id),
-            Channel(name='Chemistry', group_id=DNHSCafe.id),
-            Channel(name='Biology', group_id=DNHSCafe.id),
-            Channel(name='English', group_id=DNHSCafe.id),
-            Channel(name='Coding', group_id=DNHSCafe.id),
-            Channel(name='History', group_id=DNHSCafe.id),
-            Channel(name='General', group_id=chess_forum.id),
-            Channel(name='Chess Tips', group_id=chess_forum.id),
-            Channel(name='Game Updates', group_id=chess_forum.id),
-            Channel(name='Artists', group_id=Underground_Music.id),
-            Channel(name='Songs', group_id=Underground_Music.id),
-            Channel(name='Genres', group_id=Underground_Music.id),
-        ]
 
-        # P2 channels below:
-        
-        # Vote for the GOAT channels below:
-        internet_debates = Group.query.filter_by(_name='Internet Debates').first() 
-        calico_vote = Group.query.filter_by(_name='Calico Vote').first() 
+        if not DNHSCafe:
+            print("Warning: 'Study Room' group not found!")
+        if not chess_forum:
+            print("Warning: 'Chess Forum' group not found!")
+        if not Underground_Music:
+            print("Warning: 'Underground Music' group not found!")
+
+        share_and_care_channels = []
+        if DNHSCafe:
+            share_and_care_channels += [
+                Channel(name='Math', group_id=DNHSCafe.id),
+                Channel(name='Chemistry', group_id=DNHSCafe.id),
+                Channel(name='Biology', group_id=DNHSCafe.id),
+                Channel(name='English', group_id=DNHSCafe.id),
+                Channel(name='Coding', group_id=DNHSCafe.id),
+                Channel(name='History', group_id=DNHSCafe.id)
+            ]
+        if chess_forum:
+            share_and_care_channels += [
+                Channel(name='General', group_id=chess_forum.id),
+                Channel(name='Chess Tips', group_id=chess_forum.id),
+                Channel(name='Game Updates', group_id=chess_forum.id)
+            ]
+        if Underground_Music:
+            share_and_care_channels += [
+                Channel(name='Artists', group_id=Underground_Music.id),
+                Channel(name='Songs', group_id=Underground_Music.id),
+                Channel(name='Genres', group_id=Underground_Music.id)
+            ]
+
+        # Vote for the GOAT Channels
+        internet_debates = Group.query.filter_by(_name='Internet Debates').first()
+        calico_vote = Group.query.filter_by(_name='Calico Vote').first()
         dnero_store = Group.query.filter_by(_name='Dnero Store').first()
         beverage_debates = Group.query.filter_by(_name='Beverage Debates').first()
         nfl_goats = Group.query.filter_by(_name='NFL GOATs').first()
         car_debates = Group.query.filter_by(_name='Car Debates').first()
-        vote_for_the_goat_channels = [
-            Channel(name='Milk vs Cereal', group_id=internet_debates.id),
-            Channel(name='Hot Dog Sandwich', group_id=internet_debates.id),
-            Channel(name='Pineapple on Pizza', group_id=internet_debates.id),
-            Channel(name='Cats vs Dogs', group_id=internet_debates.id),
-            Channel(name='Coffee or Tea', group_id=internet_debates.id),
-            Channel(name='Economy Cars', group_id=car_debates.id),
-            Channel(name='Luxury Cars', group_id=car_debates.id),
-            Channel(name='Vintage Cars', group_id=car_debates.id),
-            Channel(name='Student Cars', group_id=car_debates.id),
-            Channel(name='Adventure Play House', group_id=calico_vote.id),
-            Channel(name='Sylvanian Family Restraunt House', group_id=calico_vote.id),
-            Channel(name='Magical Mermaid Castle House', group_id=calico_vote.id),
-            Channel(name='Woody School House', group_id=calico_vote.id),
-            Channel(name='Spooky Suprise Haunted House', group_id=calico_vote.id),
-            Channel(name='Brick Oven Bakery House', group_id=calico_vote.id),
-            Channel(name='Food and Drink', group_id=dnero_store.id),
-            Channel(name='Spirit', group_id=dnero_store.id),
-            Channel(name='Limited Edition', group_id=dnero_store.id),
-            Channel(name='Quarterbacks', group_id=nfl_goats.id),
-            Channel(name='Running Backs', group_id=nfl_goats.id),
-            Channel(name='Wide Receivers', group_id=nfl_goats.id),
-            Channel(name='Defensive Players', group_id=nfl_goats.id),
-            Channel(name='NFL Divisions', group_id=nfl_goats.id),
-            Channel(name='Gift Cards', group_id=dnero_store.id),
-        ]
-        
-        # P5 Channels: 
-        book_reviews = Group.query.filter_by(_name='Book Reviews').first() 
-        instabox = Group.query.filter_by(_name='Instabox').first() 
+
+        if not internet_debates:
+            print("Warning: 'Internet Debates' group not found!")
+        if not calico_vote:
+            print("Warning: 'Calico Vote' group not found!")
+        if not dnero_store:
+            print("Warning: 'Dnero Store' group not found!")
+        if not beverage_debates:
+            print("Warning: 'Beverage Debates' group not found!")
+        if not nfl_goats:
+            print("Warning: 'NFL GOATs' group not found!")
+        if not car_debates:
+            print("Warning: 'Car Debates' group not found!")
+
+        vote_for_the_goat_channels = []
+        if internet_debates:
+            vote_for_the_goat_channels += [
+                Channel(name='Milk vs Cereal', group_id=internet_debates.id),
+                Channel(name='Hot Dog Sandwich', group_id=internet_debates.id),
+                Channel(name='Pineapple on Pizza', group_id=internet_debates.id),
+                Channel(name='Cats vs Dogs', group_id=internet_debates.id),
+                Channel(name='Coffee or Tea', group_id=internet_debates.id)
+            ]
+        if car_debates:
+            vote_for_the_goat_channels += [
+                Channel(name='Economy Cars', group_id=car_debates.id),
+                Channel(name='Luxury Cars', group_id=car_debates.id),
+                Channel(name='Vintage Cars', group_id=car_debates.id),
+                Channel(name='Student Cars', group_id=car_debates.id)
+            ]
+        if calico_vote:
+            vote_for_the_goat_channels += [
+                Channel(name='Adventure Play House', group_id=calico_vote.id),
+                Channel(name='Sylvanian Family Restraunt House', group_id=calico_vote.id),
+                Channel(name='Magical Mermaid Castle House', group_id=calico_vote.id),
+                Channel(name='Woody School House', group_id=calico_vote.id),
+                Channel(name='Spooky Suprise Haunted House', group_id=calico_vote.id),
+                Channel(name='Brick Oven Bakery House', group_id=calico_vote.id)
+            ]
+        if dnero_store:
+            vote_for_the_goat_channels += [
+                Channel(name='Food and Drink', group_id=dnero_store.id),
+                Channel(name='Spirit', group_id=dnero_store.id),
+                Channel(name='Limited Edition', group_id=dnero_store.id)
+            ]
+        if nfl_goats:
+            vote_for_the_goat_channels += [
+                Channel(name='Quarterbacks', group_id=nfl_goats.id),
+                Channel(name='Running Backs', group_id=nfl_goats.id),
+                Channel(name='Wide Receivers', group_id=nfl_goats.id),
+                Channel(name='Defensive Players', group_id=nfl_goats.id),
+                Channel(name='NFL Divisions', group_id=nfl_goats.id)
+            ]
+
+        # Rate and Relate Channels
+        book_reviews = Group.query.filter_by(_name='Book Reviews').first()
+        instabox = Group.query.filter_by(_name='Instabox').first()
         flavor_fusion = Group.query.filter_by(_name='Flavor Fusion').first()
-        update_the_nest = Group.query.filter_by(_name='Update The Nest').first()
-        rate_and_relate_channels = [
-            Channel(name='Fiction Books', group_id=book_reviews.id),
-            Channel(name='Nonfiction Books', group_id=book_reviews.id),
-            Channel(name='Combos', group_id=flavor_fusion.id),
-        ]
-        
-        
+
+        if not book_reviews:
+            print("Warning: 'Book Reviews' group not found!")
+        if not instabox:
+            print("Warning: 'Instabox' group not found!")
+        if not flavor_fusion:
+            print("Warning: 'Flavor Fusion' group not found!")
+
+        rate_and_relate_channels = []
+        if book_reviews:
+            rate_and_relate_channels += [
+                Channel(name='Fiction Books', group_id=book_reviews.id),
+                Channel(name='Nonfiction Books', group_id=book_reviews.id)
+            ]
+        if flavor_fusion:
+            rate_and_relate_channels.append(Channel(name='Combos', group_id=flavor_fusion.id))
+
+        # Combine all channels
         channels = home_page_channels + shared_interest_channels + vote_for_the_goat_channels + rate_and_relate_channels
+
+        # Add channels to session and commit
         for channel in channels:
             try:
                 db.session.add(channel)
@@ -258,4 +349,4 @@ def initChannels():
                 print(f"Record created: {repr(channel)}")
             except IntegrityError:
                 db.session.rollback()
-                print(f"Records exist, duplicate email, or error: {channel.name}")
+                print(f"Error or duplicate entry: {channel.name}")

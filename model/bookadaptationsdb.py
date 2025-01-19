@@ -1,116 +1,60 @@
-from sqlalchemy.exc import SQLAlchemyError
 from __init__ import app, db
-from sqlite3 import IntegrityError
-from sqlalchemy import inspect
+import logging
 
-
-class NewBook(db.Model):
-    __tablename__ = 'newBook'
+# Renaming the class to 'Book' (singular) and capitalizing it
+class Book(db.Model):
+    __tablename__ = 'books'
     
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     
-    def __init__(self, id, title):
-       
-        self.id = id
+    def __init__(self, title):
         self.title = title
-        
-    def __repr__(self):
-
-        return f"<BookCreation(id={self.id}, title='{self.title}>"
-
 
     def create(self):
+        """Create a new book entry in the database."""
         try:
             db.session.add(self)
             db.session.commit()
-        except SQLAlchemyError as e:
+        except Exception as e:
             db.session.rollback()
-            raise ValueError(f"Error creating book: {str(e)}")
-
-    def read(self):
+            logging.warning(f"Error creating book: {str(e)}")
+            return None
+        return self
+        
+    def delete(self):
+        """Delete a book entry from the database."""
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.warning(f"Error deleting book: {str(e)}")
+            raise e
+    
+    def serialize(self):
+        """Serialize the book object to a dictionary."""
         return {
             'id': self.id,
             'title': self.title
         }
 
-    def update(self, data):
-        """
-        Updates the quiz with new data and commits the changes.
-        """
-        if not self:
-            raise ValueError("Quiz does not exist.")
-        for key, value in data.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        try:
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise ValueError(f"Error updating quiz: {str(e)}")
-        
-    def delete(self):
-        if not self:
-            raise ValueError("Book does not exist.")
-        try:
-            db.session.delete(self)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise ValueError(f"Error deleting book: {str(e)}")
-    
-   
-    @staticmethod
-    def restore(data):
-        """
-        Restores the books from the given data. It either updates existing books based on their ID
-        or creates new books if they don't exist.
-        
-        Args:
-            data (list): A list of dictionaries containing book data to restore.
-            
-        Returns:
-            dict: A dictionary with 'id' as key and 'NewBook' object as value for all restored books.
-        """
-        books = {}
-        for book_data in data:
-            book_data.pop('id', None)
-
-            book_id = book_data.get('id', None)
-            
-            if book_id is None:
-                continue  
-
-            book = NewBook.query.filter_by(id=book_id).first()
-
-            if book:
-                book.update(book_data)
-            else:
-                book = NewBook(**book_data)
-                book.create()
-
-            books[book_id] = book
-
-        return books
-
-        
 def initBookAdaptations():
-    with app.app_context():
-        db.create_all()  # Create all tables
-        inspector = inspect(db.engine)
-        print(f"Tables created: {inspector.get_table_names()}")
-
-        # Sample test data
-        books = [
-            NewBook(title="The Great Gatsby", id=1),
-            NewBook(title="1984", id=2),
-            NewBook(title="To Kill a Mockingbird", id=3)
+    # Check if any books exist in the database
+    if not Book.query.first():
+        # Create a list of books to be added
+        book_list = [
+            Book(title="The Great Gatsby"), 
+            Book(title="1984"),
+            Book(title="To Kill a Mockingbird"),
+            Book(title="Harry Potter and the Sorcerer's Stone"),
+            Book(title="Where the Red Fern Grows"),
+            Book(title="A Wrinkle in Time")
         ]
-        for book in books:
-            try:
-                book.create()
-                print(f"Created book: {book}")
-            except IntegrityError:
-                db.session.rollback()
-                print(f"Record already exists or error occurred: {book.title}")
-
+        
+        # Add each book to the database
+        for book in book_list:
+            book.create()
+        print("Books added to the database.")
+    else:
+        print("Books already exist in the database.")

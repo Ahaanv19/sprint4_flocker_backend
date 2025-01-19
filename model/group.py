@@ -165,71 +165,92 @@ def initGroups():
         IntegrityError: An error occurred when adding the tester data to the table.
     """
     with app.app_context():
-        """Create database and tables"""
+        # Create database and tables if they don't already exist
         db.create_all()
-        """Tester data for table"""
         
+        # Tester data for table
+        groups = []
+
         # Home Page Groups
         home_page_section = Section.query.filter_by(_name='Home Page').first()
-        groups = [
-            Group(name='General', section_id=home_page_section.id, moderators=[User.query.get(1)]),
-            Group(name='Support', section_id=home_page_section.id, moderators=[User.query.get(1)])
-        ]
-        
+        if home_page_section is None:
+            print("Warning: 'Home Page' section not found!")
+        else:
+            groups += [
+                Group(name='General', section_id=home_page_section.id, moderators=[User.query.get(1)]),
+                Group(name='Support', section_id=home_page_section.id, moderators=[User.query.get(1)])
+            ]
+
         # Shared Interest Groups 
         shared_interest_section = Section.query.filter_by(_name='Shared Interest').first()
-        groups += [
-            Group(name='Limitless Connections', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
-            Group(name='DNHS Football', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
-            Group(name='School Subjects', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
-            Group(name='Music', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
-            Group(name='Satire', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
-            Group(name='Activity Hub', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
-        ]
+        if shared_interest_section is None:
+            print("Warning: 'Shared Interest' section not found!")
+        else:
+            groups += [
+                Group(name='Limitless Connections', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
+                Group(name='DNHS Football', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
+                Group(name='School Subjects', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
+                Group(name='Music', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
+                Group(name='Satire', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
+                Group(name='Activity Hub', section_id=shared_interest_section.id, moderators=[User.query.get(1)]),
+            ]
 
         # Create and Compete Groups
         create_and_compete_section = Section.query.filter_by(_name='Create and Compete').first()
-        groups += [
-            Group(name='Reality Room', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
-            Group(name='Doodle', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
-            Group(name='Elevator Pitch', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
-            Group(name='Zoom n Guess', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
-            Group(name='Culinary Posts', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
-            Group(name='Riddle Room', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
-        ]
+        if create_and_compete_section is None:
+            print("Warning: 'Create and Compete' section not found!")
+        else:
+            groups += [
+                Group(name='Reality Room', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
+                Group(name='Doodle', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
+                Group(name='Elevator Pitch', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
+                Group(name='Zoom n Guess', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
+                Group(name='Culinary Posts', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
+                Group(name='Riddle Room', section_id=create_and_compete_section.id, moderators=[User.query.get(1)]),
+            ]
         
         # Share and Care Groups
         share_and_care = Section.query.filter_by(_name='Share and Care').first()
-        groups += [
-            Group(name='DNHS Cafe', section_id=share_and_care.id, moderators=[User.query.get(1)]),
-            Group(name='Cipher', section_id=share_and_care.id, moderators=[User.query.get(1)]),
-            Group(name='Chess Champion', section_id=share_and_care.id, moderators=[User.query.get(1)]),
-            Group(name='Underground Music', section_id=share_and_care.id, moderators=[User.query.get(1)]),
-            Group(name='The Hungry Games', section_id=share_and_care.id, moderators=[User.query.get(1)]),
-            Group(name='REVVIT', section_id=share_and_care.id, moderators=[User.query.get(1)])
-        ]
+        if share_and_care is None:
+            print("Warning: 'Share and Care' section not found!")
+        else:
+            groups += [
+                Group(name='DNHS Cafe', section_id=share_and_care.id, moderators=[User.query.get(1)]),
+                Group(name='Cipher', section_id=share_and_care.id, moderators=[User.query.get(1)]),
+                Group(name='Chess Champion', section_id=share_and_care.id, moderators=[User.query.get(1)]),
+                Group(name='Underground Music', section_id=share_and_care.id, moderators=[User.query.get(1)]),
+                Group(name='The Hungry Games', section_id=share_and_care.id, moderators=[User.query.get(1)]),
+                Group(name='REVVIT', section_id=share_and_care.id, moderators=[User.query.get(1)])
+            ]
 
         # Vote for the GOAT Groups
         vote_for_the_goat_section = Section.query.filter_by(_name='Vote for the GOAT').first()
-        groups += [
-            Group(name='Internet Debates', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
-            Group(name='Calico Vote', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
-            Group(name='Dnero Store', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
-            Group(name='Beverage Debates', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
-            Group(name='NFL GOATs', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
-            Group(name='Genres', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
-            Group(name='Car Debates', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)])
-        ]
+        if vote_for_the_goat_section is None:
+            print("Warning: 'Vote for the GOAT' section not found!")
+        else:
+            groups += [
+                Group(name='Internet Debates', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
+                Group(name='Calico Vote', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
+                Group(name='Dnero Store', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
+                Group(name='Beverage Debates', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
+                Group(name='NFL GOATs', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
+                Group(name='Genres', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)]),
+                Group(name='Car Debates', section_id=vote_for_the_goat_section.id, moderators=[User.query.get(1)])
+            ]
         
         # Rate and Relate Groups
         rate_and_relate_section = Section.query.filter_by(_name='Rate and Relate').first()
-        groups += [
-            Group(name='Instabox', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
-            Group(name='Flavor Fusion', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
-            Group(name='Book Reviews', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
-            Group(name='Update The Nest', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
-        ]
+        if rate_and_relate_section is None:
+            print("Warning: 'Rate and Relate' section not found!")
+        else:
+            groups += [
+                Group(name='Instabox', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
+                Group(name='Flavor Fusion', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
+                Group(name='Book Reviews', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
+                Group(name='Update The Nest', section_id=rate_and_relate_section.id, moderators=[User.query.get(1)]),
+            ]
 
+        # Add all groups to session and commit to database
         for group in groups:
             try:
                 db.session.add(group)
