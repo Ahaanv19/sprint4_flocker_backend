@@ -6,13 +6,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Path to the SQLite database
-DB_PATH = './instance/user_management.db'
+# Path to the existing SQLite database
+DB_PATH = './instance/volumes/user_management.db'
 
 # Ensure the database file and table exist
 def init_db():
-    if not os.path.exists('./instance'):
-        os.makedirs('./instance')
+    if not os.path.exists('./instance/volumes'):
+        os.makedirs('./instance/volumes')
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -24,6 +24,23 @@ def init_db():
             _theme TEXT
         )
     ''')
+
+    # Insert static data related to books if it doesn't exist
+    static_data = [
+        ("Fiction", "Mystery"),
+        ("Non-Fiction", "Educational"),
+        ("Science Fiction", "Futuristic"),
+        ("Fantasy", "Adventure"),
+        ("Biography", "Inspiration")
+    ]
+
+    for name, theme in static_data:
+        try:
+            cursor.execute("INSERT INTO sections (_name, _theme) VALUES (?, ?)", (name, theme))
+        except sqlite3.IntegrityError:
+            # Ignore duplicates
+            pass
+
     conn.commit()
     conn.close()
 
@@ -66,5 +83,3 @@ def manage_sections():
 if __name__ == '__main__':
     init_db()  # Ensure the database and table are initialized
     app.run(port=3000, debug=True)
-
-
