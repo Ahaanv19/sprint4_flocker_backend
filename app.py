@@ -80,6 +80,49 @@ def manage_sections():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+@app.route('/sections/<int:section_id>', methods=['DELETE', 'PUT'])
+def modify_section(section_id):
+    if request.method == 'DELETE':
+        # Delete a section by ID
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM sections WHERE id = ?", (section_id,))
+            conn.commit()
+            conn.close()
+
+            if cursor.rowcount == 0:
+                return jsonify({"error": "Section not found"}), 404
+
+            return jsonify({"message": "Section deleted successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    if request.method == 'PUT':
+        # Edit a section by ID
+        data = request.json
+        name = data.get("name", "").strip()
+        theme = data.get("theme", "").strip()
+
+        if not name:
+            return jsonify({"error": "Section name is required"}), 400
+
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute("UPDATE sections SET _name = ?, _theme = ? WHERE id = ?", (name, theme, section_id))
+            conn.commit()
+            conn.close()
+
+            if cursor.rowcount == 0:
+                return jsonify({"error": "Section not found"}), 404
+
+            return jsonify({"message": "Section updated successfully"}), 200
+        except sqlite3.IntegrityError:
+            return jsonify({"error": "Section name must be unique"}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     init_db()  # Ensure the database and table are initialized
     app.run(port=3000, debug=True)
