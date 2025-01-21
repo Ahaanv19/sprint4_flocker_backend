@@ -1,0 +1,25 @@
+{
+    "Dystopian": [
+      { "title": "The Hunger Games", "author": "Suzanne Collins" },
+      { "title": "1984", "author": "George Orwell" }
+    ],
+    "Classic": [
+      { "title": "To Kill a Mockingbird", "author": "Harper Lee" },
+      { "title": "Pride and Prejudice", "author": "Jane Austen" },
+      { "title": "The Great Gatsby", "author": "F. Scott Fitzgerald" },
+      { "title": "The Catcher in the Rye", "author": "J.D. Salinger" }
+    ],
+    "Romance": [
+      { "title": "Pride and Prejudice", "author": "Jane Austen" }
+    ],
+    "Fantasy": [
+      { "title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling" },
+      { "title": "The Hobbit", "author": "J.R.R. Tolkien" }
+    ],
+    "Adventure": [
+      { "title": "Moby Dick", "author": "Herman Melville" }
+    ],
+    "Historical": [
+      { "title": "War and Peace", "author": "Leo Tolstoy" }
+    ]
+  }
