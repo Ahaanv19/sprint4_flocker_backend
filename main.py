@@ -30,7 +30,6 @@ from api.ahaan import ahaan_api
 from api.student import student_api
 from api.preferences import preferences_api
 from api.chat import chat_api
-from api.points import points_api 
 from api.usersDb import usersDb_api
 from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
@@ -68,11 +67,10 @@ app.register_blueprint(student_api)
 app.register_blueprint(preferences_api)
 app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
-app.register_blueprint(points_api)
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(ai_api)
-app.register_blueprint(reco_api)
+app.register_blueprint(crud_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
