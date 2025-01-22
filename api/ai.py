@@ -5,9 +5,9 @@ import json
 import os
 from flask import Blueprint, jsonify, request
 from flask_cors import CORS
+from model.reco import Recommendation
 
-
-ai_api = Blueprint('ai_api', __name__)
+ai_api = Blueprint('ai_api', __name__, url_prefix='/api')
 CORS(ai_api)
 
 # Predefined list of books
@@ -32,19 +32,14 @@ def home():
 # Endpoint to get book recommendations
 @ai_api.route('/recommendations', methods=['GET'])
 def recommendations():
-    # Get the genre or query from the user
     genre = request.args.get('genre', None)
-    
-    # Filter books based on the genre
     if genre:
-        recommended_books = [book for book in books if book['genre'].lower() == genre.lower()]
+        recommendations = Recommendation.query.filter_by(genre=genre).all()
     else:
-        recommended_books = books
-    
-    # Randomly select up to 3 books from the recommended list
-    recommendations = random.sample(recommended_books, min(3, len(recommended_books)))
-    
-    return jsonify(recommendations)
+        recommendations = Recommendation.query.all()
+
+    recommendations_list = [rec.read() for rec in recommendations]
+    return jsonify(recommendations_list)
 
 
 # Running on port 8887
