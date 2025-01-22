@@ -36,7 +36,6 @@ from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
-from api.CRUD import crud_api
 from api.reco import reco_api
 
 
