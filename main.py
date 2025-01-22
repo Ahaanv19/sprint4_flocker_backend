@@ -72,7 +72,6 @@ app.register_blueprint(points_api)
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(ai_api)
-app.register_blueprint(crud_api)
 app.register_blueprint(reco_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
