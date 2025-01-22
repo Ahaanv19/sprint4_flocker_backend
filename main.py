@@ -38,6 +38,7 @@ from api.vote import vote_api
 from api.bookadaptationsdb import books_api
 from api.CRUD import crud_api
 from model.reco import Section
+
 # database Initialization functions
 from model.carChat import CarChat
 from model.user import User, initUsers
