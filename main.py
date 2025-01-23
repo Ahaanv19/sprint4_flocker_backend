@@ -35,7 +35,7 @@ from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
-from api.reco import reco_api
+from api.reco import booking_api
 
 
 # database Initialization functions
@@ -48,7 +48,7 @@ from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
-from model.reco import Book, initRecommendations  # Import Book and initRecommendations
+from model.reco import Booking, initbooking  
 
 # server only Vieww
 
@@ -72,7 +72,7 @@ app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(ai_api, url_prefix='/api')
-app.register_blueprint(reco_api)  # Register reco_api
+app.register_blueprint(booking_api)  # Register reco_api
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
@@ -216,9 +216,9 @@ def generate_data():
         print(f"Error in initBookAdaptations: {e}")
 
     try:
-        initRecommendations()
+        initbooking()
     except Exception as e:
-        print(f"Error in initRecommendations: {e}")
+        print(f"Error in initbooking: {e}")
 
 # Backup the old database
 def backup_database(db_uri, backup_uri):
