@@ -17,3 +17,6 @@ def add_book_to_db(book_data):
     db.session.add(new_book)
     db.session.commit()
     return new_book
+
+def initBooks():
+    db.create_all()
