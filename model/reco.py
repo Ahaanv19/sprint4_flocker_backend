@@ -8,6 +8,14 @@ class Book(db.Model):
     author = db.Column(db.String(100), nullable=False)
     genre = db.Column(db.String(50), nullable=False)
 
+    def read(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'author': self.author,
+            'genre': self.genre
+        }
+
 def add_book_to_db(book_data):
     new_book = Book(
         title=book_data['title'],
