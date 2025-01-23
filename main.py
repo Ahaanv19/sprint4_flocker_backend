@@ -48,8 +48,8 @@ from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
-from model.reco import reco_api 
-# server only Views
+from model.reco import Book, initRecommendations
+# server only Vieww
 
 # register URIs for api endpoints
 app.register_blueprint(messages_api) # Adi added this, messages for his website
