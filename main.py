@@ -48,6 +48,7 @@ from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
+from model.reco import reco_api 
 # server only Views
 
 # register URIs for api endpoints
