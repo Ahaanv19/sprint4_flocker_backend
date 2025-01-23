@@ -27,7 +27,7 @@ def home():
     return "Welcome to the Book Recommendations API!"
 
 # Endpoint to get book recommendations based on genre or all books
-@ai_api.route('/recommendations', methods=['GET'])
+@ai_api.route('/books', methods=['GET'])
 @cross_origin()
 def get_books():
     books, error = load_books()
