@@ -58,4 +58,4 @@ class BookingAPI(Resource):
         return {'message': 'Book deleted successfully.'}, 204
 
 # Add the resource to the API
-api.add_resource(BookingAPI, '/books', '/books/<int:book_id>')
+api.add_resource(BookingAPI, '/book', '/book/<int:book_id>')
