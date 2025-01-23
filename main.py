@@ -35,7 +35,7 @@ from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
-from api.reco import booking_api
+from api.booking import booking_api
 
 
 # database Initialization functions
@@ -48,7 +48,7 @@ from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
-from model.reco import Booking, initbooking  
+from model.booking import Booking, initbooking  
 
 # server only Vieww
 

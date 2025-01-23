@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from flask_cors import CORS
-from model.reco import db, Booking  # Ensure you import the correct model
+from model.booking import db, Booking  # Ensure you import the correct model
 
 # Blueprint setup for the API
 booking_api = Blueprint('booking_api', __name__, url_prefix='/api')
