@@ -1,47 +1,49 @@
 from flask import Flask, Blueprint, jsonify, request
 import random
-from flask_cors import cross_origin
+from flask_cors import cross_origin, CORS
 import json
 import os
-from flask import Blueprint, jsonify, request
-from flask_cors import CORS
 from model.reco import Recommendation
 
+# Initialize Blueprint and CORS
 ai_api = Blueprint('ai_api', __name__, url_prefix='/api')
 CORS(ai_api)
 
-# Predefined list of books
-books = [
-    {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Dystopian"},
-    {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic"},
-    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
-    {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance"},
-    {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic"},
-    {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy"},
-    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy"},
-    {"title": "Moby Dick", "author": "Herman Melville", "genre": "Adventure"},
-    {"title": "War and Peace", "author": "Leo Tolstoy", "genre": "Historical"},
-    {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "genre": "Classic"}
-]
+# Load books from the Books.json file (relative path)
+book_file_path = os.path.join(os.path.dirname(__file__), '../Books.json')
+def load_books():
+    try:
+        with open(book_file_path) as f:
+            return json.load(f), None
+    except FileNotFoundError:
+        return {}, "File not found."
+    except json.JSONDecodeError:
+        return {}, "Error decoding JSON."
 
-@ai_api.route("/check", methods=["GET"])
-@cross_origin() 
+# Home route to test if the server is running
+@ai_api.route('/', methods=['GET'])
+@cross_origin()
 def home():
-    return "Welcome to the AI API!"
+    return "Welcome to the Book Recommendations API!"
 
-# Endpoint to get book recommendations
+# Endpoint to get book recommendations based on genre or all books
 @ai_api.route('/recommendations', methods=['GET'])
-def recommendations():
+@cross_origin()
+def get_books():
+    books, error = load_books()
+    if error:
+        return jsonify({"error": error}), 500
+
     genre = request.args.get('genre', None)
-    if genre:
-        recommendations = Recommendation.query.filter_by(genre=genre).all()
+    
+    # Filter books based on the genre
+    if genre and genre in books:
+        recommended_books = books[genre]
     else:
-        recommendations = Recommendation.query.all()
-
-    recommendations_list = [rec.read() for rec in recommendations]
-    return jsonify(recommendations_list)
-
-
+        recommended_books = [book for genre_books in books.values() for book in genre_books]
+    
+    return jsonify(recommended_books)
+    
 # Running on port 8887
 if __name__ == '__main__':
     # Set logging level to debug to show logs in the terminal
