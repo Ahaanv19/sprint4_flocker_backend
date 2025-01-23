@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from __init__ import app, db
+import logging
 
 db = SQLAlchemy()
 
