@@ -9,9 +9,12 @@ from model.reco import Recommendation
 ai_api = Blueprint('ai_api', __name__, url_prefix='/api')
 CORS(ai_api)
 
-# Load books from the Books.json file (relative path)
-book_file_path = os.path.join(os.path.dirname(__file__), '../Books.json')
-def load_books():
+@ai_api.route('/', methods=['GET'])  # test if the server is running correctly
+@cross_origin()
+def home():
+    return "Welcome to the Book Adaptations API!"
+
+def load_books():  # function to load the books from the json file (books.json)
     try:
         with open(book_file_path) as f:
             return json.load(f), None
