@@ -18,5 +18,5 @@ def add_book_to_db(book_data):
     db.session.commit()
     return new_book
 
-def initBooks():
+def initRecommendations():
     db.create_all()
