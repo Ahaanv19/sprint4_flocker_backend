@@ -71,9 +71,7 @@ app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
-app.register_blueprint(ai_api, url_prefix='/api')
-app.register_blueprint(books_api)
-app.register_blueprint(booking_api)  # Register reco_api
+app.register_blueprint(ai_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
