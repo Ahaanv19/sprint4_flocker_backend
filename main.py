@@ -30,12 +30,10 @@ from api.ahaan import ahaan_api
 from api.student import student_api
 from api.preferences import preferences_api
 from api.chat import chat_api
-from api.usersDb import usersDb_api
-from api.bookadaptation import bookadaptation_api
 from api.ai import ai_api
 from api.vote import vote_api
-from api.bookadaptationsdb import books_api
-from api.booking import booking_api
+
+
 
 
 # database Initialization functions
@@ -47,8 +45,8 @@ from model.channel import Channel, initChannels
 from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
-from model.bookadaptationsdb import Book, initBookAdaptations
-from model.booking import Booking, initbooking  
+
+ 
 
 # server only Vieww
 
@@ -69,11 +67,9 @@ app.register_blueprint(student_api)
 app.register_blueprint(preferences_api)
 app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
-app.register_blueprint(usersDb_api)
-app.register_blueprint(bookadaptation_api)
 app.register_blueprint(ai_api, url_prefix='/api')
-app.register_blueprint(books_api)
-app.register_blueprint(booking_api)  # Register reco_api
+
+
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
@@ -211,16 +207,6 @@ def generate_data():
     except Exception as e:
         print(f"Error in initVotes: {e}")
 
-    try:
-        initBookAdaptations()
-    except Exception as e:
-        print(f"Error in initBookAdaptations: {e}")
-
-    try:
-        initbooking()
-    except Exception as e:
-        print(f"Error in initbooking: {e}")
-
 # Backup the old database
 def backup_database(db_uri, backup_uri):
     """Backup the current database."""
@@ -241,8 +227,6 @@ def extract_data():
         data['groups'] = [group.read() for group in Group.query.all()]
         data['channels'] = [channel.read() for channel in Channel.query.all()]
         data['posts'] = [post.read() for post in Post.query.all()]
-        data['books'] = [books.read() for books in Book.query.all()]
-        data['book'] = [book.read() for book in Booking.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -270,8 +254,6 @@ def restore_data(data):
         _ = Group.restore(data['groups'], users)
         _ = Channel.restore(data['channels'])
         _ = Post.restore(data['posts'])
-        _ = Book.restore(data['books'])
-        _ = Booking.restore(data['book'])
     print("Data restored to the new database.")
 
 # Define a command to backup data
