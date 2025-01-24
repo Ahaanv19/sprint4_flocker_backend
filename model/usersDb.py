@@ -28,7 +28,7 @@ class usersDb(db.Model):
         """
         Represents the usersDb object as a string for debugging.
         """
-        return f"<usersDb(id={self.table_id}, question='{self.name}', answer='{self.age}', quiz_id={self.user_id})>"
+        return f"<usersDb(id={self.table_id}, name='{self.name}', age='{self.age}', user_id={self.user_id})>"
 
     def create(self):
         """
