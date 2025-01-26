@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash
 import shutil
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
-
+import logging
 
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
@@ -71,6 +71,8 @@ app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
 app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
+app.register_blueprint(booking_api)
+app.register_blueprint(books_api)
 app.register_blueprint(ai_api)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
@@ -240,7 +242,7 @@ def extract_data():
         data['channels'] = [channel.read() for channel in Channel.query.all()]
         data['posts'] = [post.read() for post in Post.query.all()]
         data['books'] = [books.read() for books in Book.query.all()]
-        data['book'] = [book.read() for book in Booking.query.all()]
+        data['booking'] = [book.read() for book in Booking.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -255,22 +257,26 @@ def save_data_to_json(data, directory='backup'):
 # Load data from JSON files
 def load_data_from_json(directory='backup'):
     data = {}
-    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'books']:
-        with open(os.path.join(directory, f'{table}.json'), 'r') as f:
-            data[table] = json.load(f)
+    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'books', 'book']:
+        try:
+            with open(os.path.join(directory, f'{table}.json'), 'r') as f:
+                data[table] = json.load(f)
+        except FileNotFoundError:
+            print(f"Warning: {table}.json not found, skipping...")
     return data
 
 # Restore data to the new database
 def restore_data(data):
     with app.app_context():
-        users = User.restore(data['users'])
-        _ = Section.restore(data['sections'])
-        _ = Group.restore(data['groups'], users)
-        _ = Channel.restore(data['channels'])
-        _ = Post.restore(data['posts'])
-        _ = Book.restore(data['books'])
-        _ = Booking.restore(data['book'])
+        users = User.restore(data.get('users', []))
+        _ = Section.restore(data.get('sections', []))
+        _ = Group.restore(data.get('groups', []), users)
+        _ = Channel.restore(data.get('channels', []))
+        _ = Post.restore(data.get('posts', []))
+        _ = Book.restore(data.get('books', []))
+        _ = Booking.restore(data.get('book', []))
     print("Data restored to the new database.")
+
 
 # Define a command to backup data
 @custom_cli.command('backup_data')

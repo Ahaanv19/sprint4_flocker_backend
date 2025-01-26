@@ -54,6 +54,19 @@ class Book(db.Model):
             db.session.rollback()
             logging.warning(f"Error deleting book: {str(e)}")
             raise e
+        
+    @staticmethod
+    def restore(data):
+        """Restores books from the provided data."""
+        for book_data in data:
+            _ = book_data.pop('id', None)  # Remove 'id' from book_data
+            title = book_data.get("title", None)
+            book = Book.query.filter_by(title=title).first()
+            if book:
+                book.update(book_data)
+            else:
+                book = Book(**book_data)
+                book.create()
     
 def initBookAdaptations():
     # Check if any books exist in the database

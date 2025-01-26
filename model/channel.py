@@ -122,7 +122,10 @@ class Channel(db.Model):
     def restore(data):
         channels = {}
         for channel_data in data:
-            _ = channel_data.pop('id', None)  # Remove 'id' from channel_data
+            channel_data.pop('id', None)  # Remove 'id' from channel_data
+            channel_data.pop('group_name', None)  # Remove 'group_name' if present
+            # You might want to filter other unexpected fields similarly
+            
             name = channel_data.get("name", None)
             channel = Channel.query.filter_by(_name=name).first()
             if channel:
@@ -130,7 +133,9 @@ class Channel(db.Model):
             else:
                 channel = Channel(**channel_data)
                 channel.create()
+            channels[name] = channel  # Store the channel by name
         return channels
+
     
 def initChannels():
     """

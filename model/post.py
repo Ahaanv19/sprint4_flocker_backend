@@ -1,7 +1,6 @@
-# post.py
 import logging
 from sqlite3 import IntegrityError
-from sqlalchemy import Text, JSON
+from sqlalchemy import JSON
 from sqlalchemy.exc import IntegrityError
 from __init__ import app, db
 from model.user import User
@@ -30,17 +29,7 @@ class Post(db.Model):
     _user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     _channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'), nullable=False)
 
-    def __init__(self, title, comment, user_id=None, channel_id=None, content={}, user_name=None, channel_name=None):
-        """
-        Constructor, 1st step in object creation.
-        
-        Args:
-            title (str): The title of the post.
-            comment (str): The comment of the post.
-            user_id (int): The user who created the post.
-            channel_id (int): The channel to which the post belongs.
-            content (dict): The content of the post.
-        """
+    def __init__(self, title, comment, user_id=None, channel_id=None, content={}):
         self._title = title
         self._comment = comment
         self._user_id = user_id
@@ -48,22 +37,9 @@ class Post(db.Model):
         self._content = content
 
     def __repr__(self):
-        """
-        The __repr__ method is a special method used to represent the object in a string format.
-        Called by the repr(post) built-in function, where post is an instance of the Post class.
-        
-        Returns:
-            str: A text representation of how to create the object.
-        """
         return f"Post(id={self.id}, title={self._title}, comment={self._comment}, content={self._content}, user_id={self._user_id}, channel_id={self._channel_id})"
 
     def create(self):
-        """
-        Creates a new post in the database.
-        
-        Returns:
-            Post: The created post object, or None on error.
-        """
         try:
             db.session.add(self)
             db.session.commit()
@@ -74,18 +50,9 @@ class Post(db.Model):
         return self
         
     def read(self):
-        """
-        The read method retrieves the object data from the object's attributes and returns it as a dictionary.
-        
-        Uses:
-            The Channel.query and User.query methods to retrieve the channel and user objects.
-        
-        Returns:
-            dict: A dictionary containing the post data, including user and channel names.
-        """
         user = User.query.get(self._user_id)
         channel = Channel.query.get(self._channel_id)
-        data = {
+        return {
             "id": self.id,
             "title": self._title,
             "comment": self._comment,
@@ -93,69 +60,28 @@ class Post(db.Model):
             "user_name": user.name if user else None,
             "channel_name": channel.name if channel else None
         }
-        return data
     
-
-    def update(self):
-        """
-        Updates the post object with new data.
-        
-        Args:
-            inputs (dict): A dictionary containing the new data for the post.
-        
-        Returns:
-            Post: The updated post object, or None on error.
-        """
-        
-        inputs = Post.query.get(self.id)
-        
-        title = inputs._title
-        content = inputs._content
-        channel_id = inputs._channel_id
-        user_name = User.query.get(inputs._user_id).name if inputs._user_id else None
-        channel_name = Channel.query.get(inputs._channel_id).name if inputs._channel_id else None
-
-        # If channel_name is provided, look up the corresponding channel_id
-        if channel_name:
-            channel = Channel.query.filter_by(_name=channel_name).first()
-            if channel:
-                channel_id = channel.id
-                
-        if user_name:
-            user = User.query.filter_by(_name=user_name).first()
-            if user:
-                user_id = user.id
-            else:
-                return None
-
-        # Update table with new data
-        if title:
-            self._title = title
-        if content:
-            self._content = content
-        if channel_id:
-            self._channel_id = channel_id
-        if user_id:
-            self._user_id = user_id
+    def update(self, data):
+        if 'title' in data:
+            self._title = data['title']
+        if 'comment' in data:
+            self._comment = data['comment']
+        if 'content' in data:
+            self._content = data['content']
+        if '_user_id' in data:
+            self._user_id = data['_user_id']
+        if '_channel_id' in data:
+            self._channel_id = data['_channel_id']
 
         try:
             db.session.commit()
-        except IntegrityError:
+        except IntegrityError as e:
             db.session.rollback()
-            logging.warning(f"IntegrityError: Could not update post with title '{title}' due to missing channel_id.")
+            logging.warning(f"IntegrityError: Could not update post with title '{self._title}' due to {str(e)}.")
             return None
         return self
     
     def delete(self):
-        """
-        The delete method removes the object from the database and commits the transaction.
-        
-        Uses:
-            The db ORM methods to delete and commit the transaction.
-        
-        Raises:
-            Exception: An error occurred when deleting the object from the database.
-        """    
         try:
             db.session.delete(self)
             db.session.commit()
@@ -164,39 +90,55 @@ class Post(db.Model):
             raise e
         
     @staticmethod
-    def restore(data):
+    def restore(data, default_user_id=None, default_channel_id=None):
+        """Restores posts from the provided data."""
+        if not isinstance(data, list):
+            logging.error("Provided data is not a list.")
+            return
+        
         for post_data in data:
-            _ = post_data.pop('id', None)  # Remove 'id' from post_data
-            title = post_data.get("title", None)
+            if not isinstance(post_data, dict):
+                logging.warning("Post data is not a dictionary, skipping.")
+                continue
+            
+            # Remove 'id' from post_data
+            post_data.pop('id', None) 
+            
+            # Ensure required fields are present
+            user_id = post_data.get("_user_id") or default_user_id
+            channel_id = post_data.get("_channel_id") or default_channel_id
+            title = post_data.get("_title")
+
+            # Log missing fields with detailed post data
+            if user_id is None:
+                logging.warning(f"Missing _user_id in post data: {post_data}, skipping.")
+                continue
+            if channel_id is None:
+                logging.warning(f"Missing _channel_id in post data: {post_data}, skipping.")
+                continue
+            if title is None:
+                logging.warning(f"Missing title in post data: {post_data}, skipping.")
+                continue
+            
+            # Create or update post
             post = Post.query.filter_by(_title=title).first()
             if post:
                 post.update(post_data)
             else:
+                post_data['_user_id'] = user_id  # Ensure _user_id is included
+                post_data['_channel_id'] = channel_id  # Ensure _channel_id is included
                 post = Post(**post_data)
-                post.update(post_data)
                 post.create()
-        
+
+
+
 def initPosts():
-    """
-    The initPosts function creates the Post table and adds tester data to the table.
-    
-    Uses:
-        The db ORM methods to create the table.
-    
-    Instantiates:
-        Post objects with tester data.
-    
-    Raises:
-        IntegrityError: An error occurred when adding the tester data to the table.
-    """        
     with app.app_context():
-        """Create database and tables"""
         db.create_all()
-        """Tester data for table"""
         posts = [
-            Post(title='Added Group and Channel Select', comment='The Home Page has a Section, on this page we can select Group and Channel to allow blog filtering', content={'type': 'announcement'}, user_id=1, channel_id=1),
-            Post(title='JSON content saving through content"field in database', comment='You could add other dialogs to a post that would allow custom data or even storing reference to uploaded images.', content={'type': 'announcement'}, user_id=1, channel_id=1),
-            Post(title='Allows Post by different Users', comment='Different users seeing content is a key concept in social media.', content={'type': 'announcement'}, user_id=2, channel_id=1),
+            Post(title='Added Group and Channel Select', comment='The Home Page has a Section, on this page we can select Group and Channel to allow blog filtering', content={'type': 'announcement'}, _user_id=1, _channel_id=1),
+            Post(title='JSON content saving through content field in database', comment='You could add other dialogs to a post that would allow custom data or even storing reference to uploaded images.', content={'type': 'announcement'}, _user_id=2, _channel_id=2),
+            Post(title='Allows Post by different Users', comment='Different users seeing content is a key concept in social media.', content={'type': 'announcement'}, _user_id=3, _channel_id=3),
         ]
         
         for post in posts:
@@ -204,6 +146,5 @@ def initPosts():
                 post.create()
                 print(f"Record created: {repr(post)}")
             except IntegrityError:
-                '''fails with bad or duplicate data'''
-                db.session.remove()
+                db.session.rollback()
                 print(f"Records exist, duplicate email, or error: {post._title}")
