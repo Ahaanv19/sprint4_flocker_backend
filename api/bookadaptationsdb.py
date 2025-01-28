@@ -11,7 +11,7 @@ api = Api(books_api)
 class BookAPI(Resource):
     def get(self):
         books = Book.query.all()
-        return jsonify([book.read() for book in books])  # Use the read method
+        return jsonify([book.read() for book in books])  
 
     def post(self):
         data = request.get_json()
