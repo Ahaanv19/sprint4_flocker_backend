@@ -48,7 +48,7 @@ from model.post import Post, initPosts
 from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
-from model.booking import Booking, initbooking  
+from model.booking import Booking, initbooking
 
 # server only Vieww
 
