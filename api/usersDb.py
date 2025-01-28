@@ -20,13 +20,13 @@ class usersDbAPI:
             data = request.get_json()
             if not data:
                 return {'message': 'No input data provided'}, 400
-            if 'name' not in data or 'age' not in data or 'user_id' not in data:
-                return {'message': 'Name, age, and user_id are required'}, 400
+            if 'name' not in data or 'fav_book' not in data or 'user_id' not in data:
+                return {'message': 'Name, fav_book, and user_id are required'}, 400
 
             try:
                 user = usersDb(
                     name=data['name'],
-                    age=data['age'],
+                    fav_book=data['fav_book'],
                     user_id=data['user_id']
                 )
                 user.create()

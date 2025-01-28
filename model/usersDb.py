@@ -7,28 +7,28 @@ class usersDb(db.Model):
     """
     =usersDb Model
     
-    Represents a user with a name, age, and a user_id.
+    Represents a user with a name, fav_book, and a user_id.
     """
     __tablename__ = 'usersDb'
 
     table_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    age = db.Column(db.Integer, nullable=False)
+    fav_book = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, nullable=False)  # Consider ForeignKey if this links to another table
 
-    def __init__(self, name, age, user_id):
+    def __init__(self, name, fav_book, user_id):
         """
         Constructor for usersDb.
         """
         self.name = name
-        self.age = age
+        self.fav_book = fav_book
         self.user_id = user_id
 
     def __repr__(self):
         """
         Represents the usersDb object as a string for debugging.
         """
-        return f"<usersDb(id={self.table_id}, name='{self.name}', age='{self.age}', user_id={self.user_id})>"
+        return f"<usersDb(id={self.table_id}, name='{self.name}', fav_book='{self.fav_book}', user_id={self.user_id})>"
 
     def create(self):
         """
@@ -48,7 +48,7 @@ class usersDb(db.Model):
         return {
             "id": self.table_id,
             "name": self.name,
-            "age": self.age,
+            "fav_book": self.fav_book,
             "user_id": self.user_id
         }
 
@@ -95,9 +95,9 @@ def initUserCreation():
 
         # Sample test data
         users = [
-            usersDb(name="Arnav", age=15, user_id=1),
-            usersDb(name="Ahaan", age=15, user_id=2),
-            usersDb(name="John", age=3, user_id=3)
+            usersDb(name="Arnav", fav_book="Maze Runner", user_id=1),
+            usersDb(name="Ahaan", fav_book="Hunger Games", user_id=2),
+            usersDb(name="John", fav_book="Example Book", user_id=3)
         ]
 
         for user in users:
