@@ -82,6 +82,65 @@ def manage_users():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+@app.route('/usersDb/<int:user_id>', methods=['DELETE', 'PUT'])
+def modify_user(user_id):
+    if request.method == 'DELETE':
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM usersDb WHERE user_id = ?", (user_id,))
+            conn.commit()
+            rows_deleted = cursor.rowcount
+            conn.close()
+
+            if rows_deleted == 0:
+                return jsonify({"error": "User not found"}), 404
+
+            return jsonify({"message": "User deleted successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    if request.method == 'PUT':
+        # Update an existing user
+        data = request.json
+        name = data.get("name")
+        age = data.get("age")
+
+        if name is None and age is None:
+            return jsonify({"error": "At least one of name or age must be provided"}), 400
+
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+
+            # Build the query dynamically based on provided fields
+            query = "UPDATE usersDb SET "
+            updates = []
+            params = []
+
+            if name is not None:
+                updates.append("name = ?")
+                params.append(name)
+
+            if age is not None:
+                updates.append("age = ?")
+                params.append(age)
+
+            query += ", ".join(updates) + " WHERE user_id = ?"
+            params.append(user_id)
+
+            cursor.execute(query, tuple(params))
+            conn.commit()
+            rows_updated = cursor.rowcount
+            conn.close()
+
+            if rows_updated == 0:
+                return jsonify({"error": "User not found"}), 404
+
+            return jsonify({"message": "User updated successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     init_db()  # Ensure the database and table are initialized
     app.run(port=3001, debug=True)
