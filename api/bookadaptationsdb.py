@@ -1,11 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
-from flask_cors import CORS
 from model.bookadaptationsdb import db, Book  # Ensure you import the correct model
 
 # Blueprint setup for the API
 books_api = Blueprint('books_api', __name__, url_prefix='/api')
-CORS(books_api)
 api = Api(books_api)
 
 class BookAPI(Resource):
