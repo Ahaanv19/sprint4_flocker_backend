@@ -73,12 +73,12 @@ def initBookAdaptations():
     if not Book.query.first():
         # Create a list of books to be added
         book_list = [
-            Book(title="The Great Gatsby"), 
-            Book(title="1984"),
-            Book(title="To Kill a Mockingbird"),
-            Book(title="Harry Potter and the Sorcerer's Stone"),
-            Book(title="Where the Red Fern Grows"),
-            Book(title="A Wrinkle in Time")
+            Book(title="The Alchemist"), 
+            Book(title="Ender's Game"),
+            Book(title="The Shining"),
+            Book(title="The Hitchhiker's Guide to the Galaxy"),
+            Book(title="Where the Crawdads Sing"),
+            Book(title="A Man Called Ove")
         ]
         
         # Add each book to the database
