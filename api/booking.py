@@ -56,4 +56,17 @@ class BookingAPI(Resource):
 
         return {'message': 'Book deleted successfully.'}, 204
 
+    def update_from_frontend(self):
+        data = request.get_json()
+        if not data or 'id' not in data or 'title' not in data or 'author' not in data or 'genre' not in data:
+            return {'error': 'ID, title, author, and genre are required.'}, 400
+        book = Booking.query.get(data['id'])
+        if not book:
+            return {'error': 'Book not found.'}, 404
+        try:
+            book.update({'title': data['title'], 'author': data['author'], 'genre': data['genre']})
+        except Exception as e:
+            return {'error': str(e)}, 500
+        return book.read(), 200
+
 api.add_resource(BookingAPI, '/book', '/book/<int:book_id>', '/book/update')
