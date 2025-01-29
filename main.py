@@ -36,6 +36,7 @@ from api.ai import ai_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
 from api.booking import booking_api
+from api.sections import sections_bp
 
 
 # database Initialization functions
@@ -74,6 +75,7 @@ app.register_blueprint(bookadaptation_api)
 app.register_blueprint(booking_api)
 app.register_blueprint(books_api)
 app.register_blueprint(ai_api)
+app.register_blueprint(sections_bp)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 

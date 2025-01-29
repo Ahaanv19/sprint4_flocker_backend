@@ -1,12 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 import sqlite3
 import os
 
-app = Flask(__name__)
-CORS(app)
+# Create a Blueprint for sections
+sections_bp = Blueprint('sections', __name__)
 
-# Path to the existing SQLite database
+# Enable CORS for the Blueprint
+CORS(sections_bp)
+
+# Path to the SQLite database
 DB_PATH = './instance/volumes/user_management.db'
 
 # Ensure the database file and table exist
@@ -16,7 +19,7 @@ def init_db():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    # Create the `sections` table if it doesn't already exist
+    # Create the sections table if it doesn't already exist
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS sections (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +28,7 @@ def init_db():
         )
     ''')
 
-    # Insert static data related to books if it doesn't exist
+    # Insert static data related to sections if it doesn't exist
     static_data = [
         ("Fiction", "Mystery"),
         ("Non-Fiction", "Educational"),
@@ -38,16 +41,14 @@ def init_db():
         try:
             cursor.execute("INSERT INTO sections (_name, _theme) VALUES (?, ?)", (name, theme))
         except sqlite3.IntegrityError:
-            # Ignore duplicates
             pass
 
     conn.commit()
     conn.close()
 
-@app.route('/sections', methods=['GET', 'POST'])
+@sections_bp.route('/sections', methods=['GET', 'POST'])
 def manage_sections():
     if request.method == 'GET':
-        # Fetch all sections from the database
         try:
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
@@ -59,7 +60,6 @@ def manage_sections():
             return jsonify({"error": str(e)}), 500
 
     if request.method == 'POST':
-        # Add a new section
         data = request.json
         name = data.get("name", "").strip()
         theme = data.get("theme", "").strip()
@@ -80,10 +80,9 @@ def manage_sections():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-@app.route('/sections/<int:section_id>', methods=['DELETE', 'PUT'])
+@sections_bp.route('/sections/<int:section_id>', methods=['DELETE', 'PUT'])
 def modify_section(section_id):
     if request.method == 'DELETE':
-        # Delete a section by ID
         try:
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
@@ -99,7 +98,6 @@ def modify_section(section_id):
             return jsonify({"error": str(e)}), 500
 
     if request.method == 'PUT':
-        # Edit a section by ID
         data = request.json
         name = data.get("name", "").strip()
         theme = data.get("theme", "").strip()
@@ -122,7 +120,3 @@ def modify_section(section_id):
             return jsonify({"error": "Section name must be unique"}), 400
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    init_db()  # Ensure the database and table are initialized
-    app.run(port=3000, debug=True)
