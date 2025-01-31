@@ -37,6 +37,7 @@ from api.vote import vote_api
 from api.bookadaptationsdb import books_api
 from api.booking import booking_api
 from api.sections import sections_bp
+from api.app2 import app_bp
 
 
 # database Initialization functions
@@ -50,6 +51,7 @@ from model.nestPost import NestPost, initNestPosts # Justin added this, custom f
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
 from model.booking import Booking, initbooking
+from model.usersDb import initUserCreation
 
 # server only Vieww
 
@@ -76,6 +78,7 @@ app.register_blueprint(booking_api)
 app.register_blueprint(books_api)
 app.register_blueprint(ai_api)
 app.register_blueprint(sections_bp)
+app.register_blueprint(app_bp)
 
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
@@ -222,6 +225,11 @@ def generate_data():
         initbooking()
     except Exception as e:
         print(f"Error in initbooking: {e}")
+
+    try:
+        initUserCreation()
+    except Exception as e:
+        print(f"Error in initUserCreation: {e}")
 
 # Backup the old database
 def backup_database(db_uri, backup_uri):
