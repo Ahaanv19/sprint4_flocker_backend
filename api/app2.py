@@ -1,10 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 import sqlite3
 import os
 
-app = Flask(__name__)
-CORS(app)
+# Create a Blueprint for sections
+app_bp = Blueprint('app_bp', __name__)
+
+# Enable CORS for the Blueprint
+CORS(app_bp)
 
 # Path to the existing SQLite database
 DB_PATH = './instance/volumes/user_management.db'
@@ -42,7 +45,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-@app.route('/usersDb', methods=['GET', 'POST'])
+@app_bp.route('/usersDb', methods=['GET', 'POST'])
 def manage_users():
     if request.method == 'GET':
         # Fetch all users from the database
@@ -82,7 +85,7 @@ def manage_users():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-@app.route('/usersDb/<int:user_id>', methods=['DELETE', 'PUT'])
+@app_bp.route('/usersDb/<int:user_id>', methods=['DELETE', 'PUT'])
 def modify_user(user_id):
     if request.method == 'DELETE':
         try:
@@ -140,7 +143,3 @@ def modify_user(user_id):
             return jsonify({"message": "User updated successfully"}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    init_db()  # Ensure the database and table are initialized
-    app.run(port=3001, debug=True)
