@@ -4,7 +4,7 @@ server {
       server_name flask2025.nighthawkcodingsociety.com;
 
       location / {
-          proxy_pass http://localhost:8087;
+          proxy_pass http://localhost:8005;
 
           # Preflighted requests
           if ($request_method = OPTIONS) {
