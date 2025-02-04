@@ -7,7 +7,7 @@ bookadaptation_api = Blueprint('bookadaptation_api', __name__)
 
 @bookadaptation_api.route('/', methods=['GET']) ##test if the server is running correctly
 def home():
-    return "Welcome to the Book Adaptations API!"
+    return "Welcome to Litconnect Backend!"
 
 def load_movies(): ##function to load the movies from the json file (movies.json)
     try:
