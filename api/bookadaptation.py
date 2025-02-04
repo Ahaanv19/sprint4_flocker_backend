@@ -37,4 +37,4 @@ def search_movie():
         return jsonify({'message': f'The movie "{title}" was not found.'}), 404
     
 if __name__ == '__main__':
-    bookadaptation_api.run(debug=True, port=8005)
+    bookadaptation_api.run(debug=True, port=8103)

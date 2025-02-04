@@ -10,9 +10,9 @@ COPY . /
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
 
-ENV GUNICORN_CMD_ARGS="--workers=1 --bind=0.0.0.0:8005"
+ENV GUNICORN_CMD_ARGS="--workers=1 --bind=0.0.0.0:8103"
 
-EXPOSE 8005
+EXPOSE 8103
 
 # Define environment variable
 ENV FLASK_ENV=production
