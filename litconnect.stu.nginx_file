@@ -4,7 +4,7 @@ server {
       server_name litconnect.stu.nighthawkcodingsociety.com;
 
       location / {
-          proxy_pass http://localhost:8005;
+          proxy_pass http://localhost:8103;
 
           # Preflighted requests
           if ($request_method = OPTIONS) {
