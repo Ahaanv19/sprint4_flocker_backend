@@ -4,28 +4,24 @@ import os
 from flask_cors import CORS, cross_origin
 
 ai_api = Blueprint('ai_api', __name__)
-CORS(ai_api) ##to allow the frontend to access the API
+CORS(ai_api)  ## Apply CORS globally to the Blueprint (optional, you can also apply it to individual routes)
 
-
-@ai_api.route('/', methods=['GET']) ##test if the server is running correctly
-@cross_origin() 
-def home():
-    return "Welcome to the Book Adaptations API!"
-
-def load_books(): ##function to load the movies from the json file (movies.json)
+def load_books():  ## Function to load the books from the JSON file (books.json)
     try:
         with open('books.json') as f:
             return json.load(f)
-    except FileNotFoundError: ##if the file is not found return an error message
+    except FileNotFoundError:  ## If the file is not found return an error message
         return [], "File not found."
-    except json.JSONDecodeError: 
+    except json.JSONDecodeError:
         return [], "Error decoding JSON."
-    
-@ai_api.route('/recommendations', methods=['GET']) ##get all the movies
-@cross_origin() 
+
+@ai_api.route('/recommendations', methods=['GET'])  ## Get all the books (recommendations)
+@cross_origin()  ## Allow CORS on this specific route
 def get_books():
     books = load_books()
     return jsonify(books)
+
+# The home route is removed since it's not needed.
 
 if __name__ == '__main__':
     ai_api.run(debug=True, port=8103)
