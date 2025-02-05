@@ -16,6 +16,7 @@ import logging
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
 # API endpoints
+from api.user import user_api 
 from api.pfp import pfp_api
 from api.nestImg import nestImg_api # Justin added this, custom format for his website
 from api.post import post_api
@@ -58,6 +59,7 @@ from model.usersDb import initUserCreation
 # register URIs for api endpoints
 app.register_blueprint(messages_api) # Adi added this, messages for his website
 app.register_blueprint(pfp_api) 
+app.register_blueprint(user_api)
 app.register_blueprint(channel_api)
 app.register_blueprint(group_api)
 app.register_blueprint(section_api)
@@ -79,8 +81,6 @@ app.register_blueprint(books_api)
 app.register_blueprint(ai_api)
 app.register_blueprint(sections_bp)
 app.register_blueprint(app_bp)
-
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:4887"}}, supports_credentials=True)
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
