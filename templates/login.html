@@ -21,21 +21,22 @@
                                     Invalid username and password.
                                 </tr>
                             {% endif %}
-                            <tr>
-                                <td>Username:</td>
-                                <td><input type="text" name="username" required></td>
-                            </tr>
-                            <tr>
-                                <td>Password:</td>
-                                <td><input type="password" name="password" required></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><input type="submit" value="Login"></td>
-                            </tr>
+                            {% if logout %}
+                                <tr class="alert alert-success">
+                                    You have been logged out.
+                                </tr>
+                            {% endif %}
+                            <tr><th><label for="username">User ID</label></th></tr>
+                            <tr><td><input id='username' name="username" size="20" required></td></tr>
+                            <tr><th><label for="password">Password</label></th></tr>
+                            <tr><td><input type="password" id="password" name="password" size="20" required></td></tr>
+                            <!-- Hidden input for 'next' page, which is set on unauthorized redirects -->
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <tr><th><input type="submit" value="Submit"></th></tr>
                         </table>
                     </form>
                 </div>
-            </div>
+
         </div>
     </div>
 {% endblock %}
