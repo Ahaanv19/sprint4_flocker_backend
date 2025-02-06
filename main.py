@@ -33,7 +33,6 @@ from api.preferences import preferences_api
 from api.chat import chat_api
 from api.usersDb import usersDb_api
 from api.bookadaptation import bookadaptation_api
-from api.ai import ai_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
 from api.booking import booking_api
@@ -78,7 +77,6 @@ app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(booking_api)
 app.register_blueprint(books_api)
-app.register_blueprint(ai_api)
 app.register_blueprint(sections_bp)
 app.register_blueprint(app_bp)
 

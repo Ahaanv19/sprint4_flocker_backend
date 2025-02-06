@@ -33,5 +33,4 @@ def search_movie():
 
 # Remove the home function since it's no longer needed.
 
-if __name__ == '__main__':
-    bookadaptation_api.run(debug=True, port=8103)
+
