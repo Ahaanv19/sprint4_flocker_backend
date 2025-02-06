@@ -6,8 +6,8 @@ import os
 # Create a Blueprint for sections
 sections_bp = Blueprint('sections', __name__)
 
-# Enable CORS for the Blueprint (Allow all origins for now)
-CORS(sections_bp, resources={r"/*": {"origins": "*"}})
+# Enable CORS for all methods
+CORS(sections_bp, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Path to the SQLite database
 DB_PATH = './instance/volumes/user_management.db'
@@ -20,12 +20,11 @@ def init_db():
 
         conn = sqlite3.connect(DB_PATH, check_same_thread=False)
         cursor = conn.cursor()
-        # Create the sections table if it doesn't already exist
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS sections (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _name TEXT NOT NULL UNIQUE,
-                _theme TEXT
+                name TEXT NOT NULL UNIQUE,
+                theme TEXT
             )
         ''')
 
@@ -40,9 +39,9 @@ def init_db():
 
         for name, theme in static_data:
             try:
-                cursor.execute("INSERT INTO sections (_name, _theme) VALUES (?, ?)", (name, theme))
+                cursor.execute("INSERT INTO sections (name, theme) VALUES (?, ?)", (name, theme))
             except sqlite3.IntegrityError:
-                pass
+                pass  # Ignore duplicates
 
         conn.commit()
     except Exception as e:
@@ -77,7 +76,7 @@ def manage_sections():
 
             conn = sqlite3.connect(DB_PATH, check_same_thread=False)
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO sections (_name, _theme) VALUES (?, ?)", (name, theme))
+            cursor.execute("INSERT INTO sections (name, theme) VALUES (?, ?)", (name, theme))
             conn.commit()
             section_id = cursor.lastrowid
             return jsonify({"id": section_id, "name": name, "theme": theme}), 201
@@ -119,7 +118,7 @@ def modify_section(section_id):
 
             conn = sqlite3.connect(DB_PATH, check_same_thread=False)
             cursor = conn.cursor()
-            cursor.execute("UPDATE sections SET _name = ?, _theme = ? WHERE id = ?", (name, theme, section_id))
+            cursor.execute("UPDATE sections SET name = ?, theme = ? WHERE id = ?", (name, theme, section_id))
             conn.commit()
 
             if cursor.rowcount == 0:
