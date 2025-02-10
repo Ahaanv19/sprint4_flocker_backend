@@ -1,13 +1,9 @@
 from flask import Blueprint, request, jsonify
-from flask_cors import CORS
 import sqlite3
 import os
 
 # Create a Blueprint for sections
 sections_bp = Blueprint('sections', __name__)
-
-# Enable CORS for the Blueprint
-CORS(sections_bp)
 
 # Path to the SQLite database
 DB_PATH = './instance/volumes/user_management.db'
