@@ -1,39 +1,47 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 
-# Create the Blueprint with name `dewy_bp`
-dewy_api = Blueprint("dewy_bp", __name__)  
+# Create the Blueprint with name `dewy_api`
+dewy_api = Blueprint("dewy_api", __name__)  
 CORS(dewy_api)  # Enable CORS for this blueprint
 
-# In-memory storage (not a database)
-users = []
+# Static in-memory storage with predefined dewy data
+dewy_data = [
+    {"id": 1, "name": "Alice", "email": "alice@example.com"},
+    {"id": 2, "name": "Bob", "email": "bob@example.com"},
+    {"id": 3, "name": "Charlie", "email": "charlie@example.com"}
+]
 
-@dewy_api.route('/users', methods=['GET'])
-def get_users():
-    return jsonify(users)
+# Route to get all dewy data
+@dewy_api.route('/dewy', methods=['GET'])
+def get_dewy():
+    return jsonify(dewy_data)
 
-@dewy_api.route('/users', methods=['POST'])
-def add_user():
+# Route to add new dewy data
+@dewy_api.route('/dewy', methods=['POST'])
+def add_dewy():
     data = request.get_json()
     if "name" not in data or "email" not in data:
         return jsonify({"error": "Missing name or email"}), 400
 
-    new_user = {"id": len(users) + 1, "name": data["name"], "email": data["email"]}
-    users.append(new_user)
-    return jsonify(new_user), 201
+    new_dewy = {"id": len(dewy_data) + 1, "name": data["name"], "email": data["email"]}
+    dewy_data.append(new_dewy)
+    return jsonify(new_dewy), 201
 
-@dewy_api.route('/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    global users
-    users = [user for user in users if user["id"] != user_id]
-    return jsonify({"message": "User deleted"}), 200
+# Route to delete a dewy entry
+@dewy_api.route('/dewy/<int:dewy_id>', methods=['DELETE'])
+def delete_dewy(dewy_id):
+    global dewy_data
+    dewy_data = [dewy for dewy in dewy_data if dewy["id"] != dewy_id]
+    return jsonify({"message": "Dewy entry deleted"}), 200
 
-@dewy_api.route('/users/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
+# Route to update a dewy entry
+@dewy_api.route('/dewy/<int:dewy_id>', methods=['PUT'])
+def update_dewy(dewy_id):
     data = request.get_json()
-    for user in users:
-        if user["id"] == user_id:
-            user["name"] = data.get("name", user["name"])
-            user["email"] = data.get("email", user["email"])
-            return jsonify(user), 200
-    return jsonify({"error": "User not found"}), 404
+    for dewy in dewy_data:
+        if dewy["id"] == dewy_id:
+            dewy["name"] = data.get("name", dewy["name"])
+            dewy["email"] = data.get("email", dewy["email"])
+            return jsonify(dewy), 200
+    return jsonify({"error": "Dewy entry not found"}), 404
