@@ -6,16 +6,19 @@ server {
     location / {
         proxy_pass http://localhost:8103;
 
-        # Always set CORS headers
-        add_header "Access-Control-Allow-Origin" "https://ahaanv19.github.io" always;
-        add_header "Access-Control-Allow-Credentials" "true" always;
-        add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS, HEAD" always;
-        add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Origin, X-Requested-With, Content-Type, Accept" always;
-
-        # Handle preflight requests
+        # Preflighted requests
         if ($request_method = OPTIONS) {
-            add_header "Access-Control-Max-Age" 600 always;
+            add_header "Access-Control-Allow-Credentials" "true" always;
+            add_header "Access-Control-Allow-Origin" "https://ahaanv19.github.io" always;
+            add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS" always;
+            add_header "Access-Control-Allow-MaxAge" 600 always;
+            add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Origin, X-Requested-With, Content-Type, Accept" always;
             return 204;
         }
+
+        # Allow other methods for regular requests
+        add_header "Access-Control-Allow-Origin" "https://ahaanv19.github.io" always;
+        add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS" always;
+        add_header "Access-Control-Allow-Headers" "Content-Type, Authorization" always;
     }
 }
