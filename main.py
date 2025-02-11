@@ -2,29 +2,29 @@
 import json
 import os
 from urllib.parse import urljoin, urlparse
-from flask import abort, redirect, render_template, request, send_from_directory, url_for, jsonify  # import render_template from "public" flask libraries
+from flask import abort, redirect, render_template, request, send_from_directory, url_for, jsonify
 from flask_login import current_user, login_user, logout_user
 from flask.cli import AppGroup
 from flask_login import current_user, login_required
 from flask import current_app
 from werkzeug.security import generate_password_hash
 import shutil
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_cors import CORS 
 import logging
 
 # import "objects" from "this" project
-from __init__ import app, db, login_manager  # Key Flask objects 
+from __init__ import app, db, login_manager
 # API endpoints
 from api.user import user_api 
 from api.pfp import pfp_api
-from api.nestImg import nestImg_api # Justin added this, custom format for his website
+from api.nestImg import nestImg_api
 from api.post import post_api
 from api.channel import channel_api
 from api.group import group_api
 from api.mod import section_api
-from api.nestPost import nestPost_api # Justin added this, custom format for his website
-from api.messages_api import messages_api # Adi added this, messages for his website
+from api.nestPost import nestPost_api
+from api.messages_api import messages_api
 from api.carphoto import car_api
 from api.carChat import car_chat_api
 from api.ahaan import ahaan_api
@@ -38,7 +38,8 @@ from api.bookadaptationsdb import books_api
 from api.booking import booking_api
 from api.sections import sections_bp
 from api.app2 import app_bp
-
+from api.bookquotesdb import quotes_api
+from api.litawardsdb import awards_api  # New import for Literary Awards API
 
 # database Initialization functions
 from model.carChat import CarChat
@@ -47,23 +48,24 @@ from model.mod import Section, initSections
 from model.group import Group, initGroups
 from model.channel import Channel, initChannels
 from model.post import Post, initPosts
-from model.nestPost import NestPost, initNestPosts # Justin added this, custom format for his website
+from model.nestPost import NestPost, initNestPosts
 from model.vote import Vote, initVotes
 from model.bookadaptationsdb import Book, initBookAdaptations
 from model.booking import Booking, initbooking
 from model.usersDb import initUserCreation
+from model.bookquotesdb import Quote, initQuotes
+from model.litawardsdb import LiteraryAward, initLiteraryAwards  # New imports for Literary Awards
 
-# server only Vieww
+# server only View
 
 # register URIs for api endpoints
-app.register_blueprint(messages_api) # Adi added this, messages for his website
+app.register_blueprint(messages_api)
 app.register_blueprint(pfp_api) 
 app.register_blueprint(user_api)
 app.register_blueprint(channel_api)
 app.register_blueprint(group_api)
 app.register_blueprint(section_api)
 app.register_blueprint(car_chat_api)
-# Added new files to create nestPosts, uses a different format than Mortensen and didn't want to touch his junk
 app.register_blueprint(nestPost_api)
 app.register_blueprint(nestImg_api)
 app.register_blueprint(vote_api)
@@ -79,6 +81,8 @@ app.register_blueprint(booking_api)
 app.register_blueprint(books_api)
 app.register_blueprint(sections_bp)
 app.register_blueprint(app_bp)
+app.register_blueprint(quotes_api)
+app.register_blueprint(awards_api)  # New registration for Literary Awards API
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
@@ -124,7 +128,6 @@ def logout():
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
-    # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
 @app.route('/')  # connects default URL to index() function
@@ -144,7 +147,7 @@ def u2table():
     users = User.query.all()
     return render_template("u2table.html", user_data=users)
 
-# Helper function to extract uploads for a user (ie PFP image)
+# Helper function to extract uploads for a user
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
@@ -225,9 +228,14 @@ def generate_data():
         print(f"Error in initbooking: {e}")
 
     try:
-        initUserCreation()
+        initQuotes()
     except Exception as e:
-        print(f"Error in initUserCreation: {e}")
+        print(f"Error in initQuotes: {e}")
+
+    try:
+        initLiteraryAwards() 
+    except Exception as e:
+        print(f"Error in initLiteraryAwards: {e}")
 
 # Backup the old database
 def backup_database(db_uri, backup_uri):
@@ -251,6 +259,8 @@ def extract_data():
         data['posts'] = [post.read() for post in Post.query.all()]
         data['books'] = [books.read() for books in Book.query.all()]
         data['booking'] = [book.read() for book in Booking.query.all()]
+        data['quotes'] = [quote.read() for quote in Quote.query.all()]
+        data['literary_awards'] = [award.read() for award in LiteraryAward.query.all()] 
     return data
 
 # Save extracted data to JSON files
@@ -265,7 +275,7 @@ def save_data_to_json(data, directory='backup'):
 # Load data from JSON files
 def load_data_from_json(directory='backup'):
     data = {}
-    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'books', 'book']:
+    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'books', 'booking', 'quotes', 'literary_awards']:  # New entry
         try:
             with open(os.path.join(directory, f'{table}.json'), 'r') as f:
                 data[table] = json.load(f)
@@ -282,9 +292,10 @@ def restore_data(data):
         _ = Channel.restore(data.get('channels', []))
         _ = Post.restore(data.get('posts', []))
         _ = Book.restore(data.get('books', []))
-        _ = Booking.restore(data.get('book', []))
+        _ = Booking.restore(data.get('booking', []))
+        _ = Quote.restore(data.get('quotes', [])) 
+        _ = LiteraryAward.restore(data.get('literary_awards', []))  # New restoration
     print("Data restored to the new database.")
-
 
 # Define a command to backup data
 @custom_cli.command('backup_data')
