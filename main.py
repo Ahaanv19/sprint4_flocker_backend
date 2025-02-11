@@ -26,7 +26,7 @@ from api.mod import section_api
 from api.nestPost import nestPost_api
 from api.messages_api import messages_api
 from api.carphoto import car_api
-from api.carChat import car_chat_api
+from api.dewey import dewy_api
 from api.ahaan import ahaan_api
 from api.student import student_api
 from api.preferences import preferences_api
@@ -65,7 +65,7 @@ app.register_blueprint(user_api)
 app.register_blueprint(channel_api)
 app.register_blueprint(group_api)
 app.register_blueprint(section_api)
-app.register_blueprint(car_chat_api)
+app.register_blueprint(dewy_api)
 app.register_blueprint(nestPost_api)
 app.register_blueprint(nestImg_api)
 app.register_blueprint(vote_api)
