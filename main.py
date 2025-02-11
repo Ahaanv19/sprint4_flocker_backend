@@ -40,6 +40,7 @@ from api.sections import sections_bp
 from api.app2 import app_bp
 from api.bookquotesdb import quotes_api
 from api.litawardsdb import awards_api  # New import for Literary Awards API
+from api.lib import lib_api
 
 # database Initialization functions
 from model.carChat import CarChat
@@ -83,6 +84,7 @@ app.register_blueprint(sections_bp)
 app.register_blueprint(app_bp)
 app.register_blueprint(quotes_api)
 app.register_blueprint(awards_api)  # New registration for Literary Awards API
+app.register_blueprint(lib_api)
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
