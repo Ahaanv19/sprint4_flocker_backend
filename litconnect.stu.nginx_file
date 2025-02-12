@@ -1,19 +1,24 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name litconnect.stu.nighthawkcodingsociety.com ; # Change server name to the one on R53
-    # Configure CORS Headers
-    location / { 
-        proxy_pass http://localhost:8103; # Change port to port on docker
-        # Simple requests
-        if ($request_method ~* "(GET|POST|PUT|DELETE)") { # Customize Request methods based on your needs
-                add_header "Access-Control-Allow-Origin"  "https://ahaanv19.github.io";
+    server_name litconnect.stu.nighthawkcodingsociety.com;
+
+    location / {
+        proxy_pass http://localhost:8103;
+
+        # Preflighted requests
+        if ($request_method = OPTIONS) {
+            add_header "Access-Control-Allow-Credentials" "true" always;
+            add_header "Access-Control-Allow-Origin" "https://ahaanv19.github.io" always;
+            add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS" always;
+            add_header "Access-Control-Allow-MaxAge" 600 always;
+            add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Origin, X-Requested-With, Content-Type, Accept" always;
+            return 204;
         }
-        # Preflighted requests 
-        if ($request_method = OPTIONS ) {
-                add_header "Access-Control-Allow-Origin"  "https://ahaanv19.github.io";
-                add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS, HEAD"; # Make sure the request methods above match here
-                add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Requested-With, Content-Type, Accept";
-                return 200;
-        }
+
+        # Allow other methods for regular requests
+        add_header "Access-Control-Allow-Origin" "https://ahaanv19.github.io" always;
+        add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS" always;
+        add_header "Access-Control-Allow-Headers" "Content-Type, Authorization" always;
     }
+}
