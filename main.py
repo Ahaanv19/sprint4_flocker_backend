@@ -40,6 +40,7 @@ from api.app2 import app_bp
 from api.bookquotesdb import quotes_api
 from api.litawardsdb import awards_api  # New import for Literary Awards API
 from api.lib import lib_api
+from api.sections import section_api 
 
 # database Initialization functions
 from model.carChat import CarChat
