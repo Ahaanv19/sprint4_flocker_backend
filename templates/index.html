@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card shadow-lg" style="background-color:rgb(49, 49, 49); color: white; border-radius: 15px;">
+                <div class="card shadow-lg" style="background-color:rgb(36, 36, 36); color: white; border-radius: 15px;">
                     <img class="card-img-top" src="{{ url_for('static', filename='') }}" alt= 'Put image here' style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
                     <div class="card-body">
                     <h5 class="card-title">Development Process</h5>
@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card shadow-lg" style="background-color:rgb(45, 44, 44); color: white; border-radius: 15px;">
-                    <img class="card-img-top" src="{{ url_for('static', filename='assets/pythondb.png') }}" alt="Backend and Persistence" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
+                    <img class="card-img-top" src="{{ url_for('static', filename='') }}" alt="Put image here" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
                     <div class="card-body">
                     <h5 class="card-title">Individual Features</h5>
                     <ul>
@@ -56,7 +56,7 @@
     <button id="testButton" class="btn btn-warning mt-3">Test CORS</button>
     <script>
         document.getElementById('testButton').addEventListener('click', () => {
-            fetch('http://localhost:3000/authenticate', {
+            fetch('http://localhost:8103/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
