@@ -1,138 +1,36 @@
 from flask import Blueprint, request, jsonify
-from flask_cors import CORS
-import sqlite3
-import os
+from flask_restful import Api, Resource
+from model.mod import Section
 
-# Create a Blueprint for sections
-sections_bp = Blueprint('sections', __name__)
+section_api = Blueprint('section_api', __name__, url_prefix='/api')
+api = Api(section_api)
 
-# Enable CORS for the Blueprint (Allow all origins for now)
-CORS(sections_bp, resources={r"/*": {"origins": "*"}})
+class SectionAPI:
+    class _CRUD(Resource):
+        def post(self):
+            data = request.get_json()  # Get data from frontend
+            section = Section(data['name'], data['theme'])
+            section.create()  # Add section to the DB
+            return jsonify(section.read())
 
-# Path to the SQLite database
-DB_PATH = './instance/volumes/user_management.db'
+        def get(self):
+            sections = Section.query.all()  # Get all sections from the DB
+            return jsonify([section.read() for section in sections])
 
-# Ensure the database file and table exist
-def init_db():
-    try:
-        if not os.path.exists('./instance/volumes'):
-            os.makedirs('./instance/volumes')
-
-        conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-        cursor = conn.cursor()
-        # Create the sections table if it doesn't already exist
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS sections (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _name TEXT NOT NULL UNIQUE,
-                _theme TEXT
-            )
-        ''')
-
-        # Insert static data related to sections if it doesn't exist
-        static_data = [
-            ("Fiction", "Mystery"),
-            ("Non-Fiction", "Educational"),
-            ("Science Fiction", "Futuristic"),
-            ("Fantasy", "Adventure"),
-            ("Biography", "Inspiration")
-        ]
-
-        for name, theme in static_data:
-            try:
-                cursor.execute("INSERT INTO sections (_name, _theme) VALUES (?, ?)", (name, theme))
-            except sqlite3.IntegrityError:
-                pass
-
-        conn.commit()
-    except Exception as e:
-        print(f"Error initializing database: {e}")
-    finally:
-        if 'conn' in locals():
-            conn.close()
-
-@sections_bp.route('/sections', methods=['GET', 'POST'])
-def manage_sections():
-    if request.method == 'GET':
-        try:
-            conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM sections")
-            sections = [{"id": row[0], "name": row[1], "theme": row[2]} for row in cursor.fetchall()]
-            return jsonify(sections), 200
-        except Exception as e:
-            return jsonify({"error": f"Failed to fetch sections: {e}"}), 500
-        finally:
-            if 'conn' in locals():
-                conn.close()
-
-    if request.method == 'POST':
-        try:
+        def put(self):
             data = request.get_json()
-            name = data.get("name", "").strip()
-            theme = data.get("theme", "").strip()
+            section = Section.query.get(data['id'])
+            if section:
+                section.update(data)
+                return jsonify(section.read())
+            return jsonify({'message': 'Section not found'}), 404
 
-            if not name:
-                return jsonify({"error": "Section name is required"}), 400
-
-            conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO sections (_name, _theme) VALUES (?, ?)", (name, theme))
-            conn.commit()
-            section_id = cursor.lastrowid
-            return jsonify({"id": section_id, "name": name, "theme": theme}), 201
-        except sqlite3.IntegrityError:
-            return jsonify({"error": "Section name must be unique"}), 400
-        except Exception as e:
-            return jsonify({"error": f"Failed to add section: {e}"}), 500
-        finally:
-            if 'conn' in locals():
-                conn.close()
-
-@sections_bp.route('/sections/<int:section_id>', methods=['DELETE', 'PUT'])
-def modify_section(section_id):
-    if request.method == 'DELETE':
-        try:
-            conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM sections WHERE id = ?", (section_id,))
-            conn.commit()
-
-            if cursor.rowcount == 0:
-                return jsonify({"error": "Section not found"}), 404
-
-            return jsonify({"message": "Section deleted successfully"}), 200
-        except Exception as e:
-            return jsonify({"error": f"Failed to delete section: {e}"}), 500
-        finally:
-            if 'conn' in locals():
-                conn.close()
-
-    if request.method == 'PUT':
-        try:
+        def delete(self):
             data = request.get_json()
-            name = data.get("name", "").strip()
-            theme = data.get("theme", "").strip()
+            section = Section.query.get(data['id'])
+            if section:
+                section.delete()
+                return jsonify({'message': 'Section deleted'})
+            return jsonify({'message': 'Section not found'}), 404
 
-            if not name:
-                return jsonify({"error": "Section name is required"}), 400
-
-            conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-            cursor = conn.cursor()
-            cursor.execute("UPDATE sections SET _name = ?, _theme = ? WHERE id = ?", (name, theme, section_id))
-            conn.commit()
-
-            if cursor.rowcount == 0:
-                return jsonify({"error": "Section not found"}), 404
-
-            return jsonify({"message": "Section updated successfully"}), 200
-        except sqlite3.IntegrityError:
-            return jsonify({"error": "Section name must be unique"}), 400
-        except Exception as e:
-            return jsonify({"error": f"Failed to update section: {e}"}), 500
-        finally:
-            if 'conn' in locals():
-                conn.close()
-
-# Initialize the database when the module is loaded
-init_db()
+api.add_resource(SectionAPI._CRUD, '/section')
