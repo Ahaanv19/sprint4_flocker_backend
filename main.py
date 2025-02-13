@@ -40,7 +40,7 @@ from api.app2 import app_bp
 from api.bookquotesdb import quotes_api
 from api.litawardsdb import awards_api  # New import for Literary Awards API
 from api.lib import lib_api
-from api.sections import section_api 
+from api.sections import sections_bp
 
 # database Initialization functions
 from model.carChat import CarChat
@@ -65,7 +65,7 @@ app.register_blueprint(pfp_api)
 app.register_blueprint(user_api)
 app.register_blueprint(channel_api)
 app.register_blueprint(group_api)
-app.register_blueprint(section_api)
+app.register_blueprint(sections_bp)
 app.register_blueprint(dewy_api)
 app.register_blueprint(nestPost_api)
 app.register_blueprint(nestImg_api)
