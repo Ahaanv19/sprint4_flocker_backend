@@ -3,7 +3,9 @@ from flask_cors import CORS
 
 # Create the Blueprint with name `dewy_api`
 dewy_api = Blueprint("dewy_api", __name__)  
-CORS(dewy_api)  # Enable CORS for this blueprint
+
+# Enable CORS for the Blueprint (Allow all origins for now)
+CORS(dewy_api, resources={r"/*": {"origins": "https://ahaanv19.github.io"}})  # Apply CORS
 
 # Static in-memory storage with predefined dewy data
 dewy_data = [
