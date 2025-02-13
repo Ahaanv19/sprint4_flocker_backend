@@ -43,7 +43,7 @@ class BookAPI(Resource):
         if 'author' in data:
             book.author = data['author']
         
-        result = book.update()  # Use the update method
+        result = book.update(data)  # Pass the data to the update method
         if result is None:
             return {'error': 'Error updating book.'}, 500
 
