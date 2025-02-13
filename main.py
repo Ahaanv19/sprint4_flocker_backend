@@ -57,6 +57,9 @@ from model.usersDb import initUserCreation
 from model.bookquotesdb import Quote, initQuotes
 from model.litawardsdb import LiteraryAward, initLiteraryAwards  # New imports for Literary Awards
 
+main = Flask(__name__)
+CORS(main, origins=["https://ahaanv19.github.io"], supports_credentials=True)
+
 # server only View
 
 # register URIs for api endpoints
