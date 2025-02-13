@@ -36,7 +36,6 @@ from api.bookadaptation import bookadaptation_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
 from api.booking import booking_api
-from api.app2 import app_bp
 from api.bookquotesdb import quotes_api
 from api.litawardsdb import awards_api  # New import for Literary Awards API
 from api.lib import lib_api
@@ -83,7 +82,6 @@ app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(booking_api)
 app.register_blueprint(books_api)
-app.register_blueprint(app_bp)
 app.register_blueprint(quotes_api)
 app.register_blueprint(awards_api)  # New registration for Literary Awards API
 app.register_blueprint(lib_api)
