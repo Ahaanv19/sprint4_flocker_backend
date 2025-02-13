@@ -21,7 +21,7 @@ class BookAPI(Resource):
         if existing_book:
             return {'error': 'Book with this title already exists.'}, 400
 
-        new_book = Booking(title=data['title'])
+        new_book = Booking(title=data['title'], genre=data.get('genre'), author=data.get('author'))
         result = new_book.create()  # Use the create method
         if result is None:
             return {'error': 'Error creating book.'}, 500
@@ -37,12 +37,17 @@ class BookAPI(Resource):
         if not book:
             return {'error': 'Book not found.'}, 404
 
-        try:
-            book.update({'title': data['title']})  # Use the update method
-        except Exception as e:
-            return {'error': str(e)}, 500
+        book.title = data['title']
+        if 'genre' in data:
+            book.genre = data['genre']
+        if 'author' in data:
+            book.author = data['author']
+        
+        result = book.update()  # Use the update method
+        if result is None:
+            return {'error': 'Error updating book.'}, 500
 
-        return book.read(), 200  # Return the updated book
+        return book.read(), 200  # Use the read method to return the updated book
 
     def delete(self, book_id):
         book = Booking.query.get(book_id)
