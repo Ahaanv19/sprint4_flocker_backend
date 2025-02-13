@@ -17,7 +17,7 @@ def init_db():
     if not os.path.exists('./instance/volumes'):
         os.makedirs('./instance/volumes')
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS usersDb (
@@ -50,29 +50,31 @@ def manage_users():
     if request.method == 'GET':
         # Fetch all users from the database
         try:
-            conn = sqlite3.connect(DB_PATH)
+            conn = sqlite3.connect(DB_PATH, check_same_thread=False)
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM usersDb")
             users = [
                 {"table_id": row[0], "name": row[1], "fav_book": row[2], "user_id": row[3]} 
                 for row in cursor.fetchall()
             ]
-            conn.close()
             return jsonify(users), 200
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return jsonify({"failed to fetch usersDb": str(e)}), 500
+        finally:
+            if 'conn' in locals():
+                conn.close()
 
     if request.method == 'POST':
-        # Add a new user
-        data = request.json
-        name = data.get("name", "").strip()
-        fav_book = data.get("fav_book", "").strip()
-        user_id = data.get("user_id")
-
-        if not name or fav_book is None or user_id is None:
-            return jsonify({"error": "Name, fav_book, and user_id are required"}), 400
-
         try:
+        # Add a new user
+            data = request.json
+            name = data.get("name", "").strip()
+            fav_book = data.get("fav_book", "").strip()
+            user_id = data.get("user_id")
+
+            if not name or fav_book is None or user_id is None:
+                return jsonify({"error": "Name, fav_book, and user_id are required"}), 400
+
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
             cursor.execute("INSERT INTO usersDb (name, fav_book, user_id) VALUES (?, ?, ?)", (name, fav_book, user_id))
@@ -84,6 +86,9 @@ def manage_users():
             return jsonify({"error": "User ID must be unique"}), 400
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        finally:
+            if 'conn' in locals():
+                conn.close()
 
 @app_bp.route('/usersDb/<int:user_id>', methods=['DELETE', 'PUT'])
 def modify_user(user_id):
@@ -93,53 +98,42 @@ def modify_user(user_id):
             cursor = conn.cursor()
             cursor.execute("DELETE FROM usersDb WHERE user_id = ?", (user_id,))
             conn.commit()
-            rows_deleted = cursor.rowcount
-            conn.close()
 
-            if rows_deleted == 0:
+            if cursor.rowcount == 0:
                 return jsonify({"error": "User not found"}), 404
 
             return jsonify({"message": "User deleted successfully"}), 200
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return jsonify({"Failed to delete user": str(e)}), 500
+        finally:
+            if 'conn' in locals():
+                conn.close()
 
     if request.method == 'PUT':
-        # Update an existing user
-        data = request.json
-        name = data.get("name")
-        fav_book = data.get("fav_book")
-
-        if name is None and fav_book is None:
-            return jsonify({"error": "At least one of name or fav_book must be provided"}), 400
-
         try:
-            conn = sqlite3.connect(DB_PATH)
+        # Update an existing user
+            data = request.json
+            name = data.get("name", "").strip()
+            fav_book = data.get("fav_book", "").strip()
+
+            if name is None and fav_book is None:
+                return jsonify({"error": "At least one of name or fav_book must be provided"}), 400
+
+            conn = sqlite3.connect(DB_PATH, check_same_thread=False)
             cursor = conn.cursor()
+            cursor.execute("UPDATE sections SET _name = ?, _fav_book = ? WHERE user_id = ?", (name, fav_book, user_id))
 
-            # Build the query dynamically based on provided fields
-            query = "UPDATE usersDb SET "
-            updates = []
-            params = []
-
-            if name is not None:
-                updates.append("name = ?")
-                params.append(name)
-
-            if fav_book is not None:
-                updates.append("fav_book = ?")
-                params.append(fav_book)
-
-            query += ", ".join(updates) + " WHERE user_id = ?"
-            params.append(user_id)
-
-            cursor.execute(query, tuple(params))
-            conn.commit()
-            rows_updated = cursor.rowcount
-            conn.close()
-
-            if rows_updated == 0:
+            if cursor.rowcount == 0:
                 return jsonify({"error": "User not found"}), 404
 
             return jsonify({"message": "User updated successfully"}), 200
+        except sqlite3.IntegrityError:
+            return jsonify({"error": "User name must be unique"}), 400
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return jsonify({"error": f"Failed to update user: {e}"}), 500
+        finally:
+            if 'conn' in locals():
+                conn.close()
+
+# Initialize the database when the module is loaded
+init_db()
