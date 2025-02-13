@@ -3,7 +3,9 @@ from flask_cors import CORS
 
 # Create the Blueprint with name `lib_api`
 lib_api = Blueprint("lib_api", __name__)  
-CORS(lib_api)  # Enable CORS for this blueprint
+
+# Enable CORS for the Blueprint (Allow all origins for now)
+CORS(lib_api, resources={r"/*": {"origins": "https://ahaanv19.github.io"}})  # Apply CORS
 
 # Static in-memory storage with predefined library data
 lib_data = [
