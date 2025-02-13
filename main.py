@@ -31,7 +31,6 @@ from api.ahaan import ahaan_api
 from api.student import student_api
 from api.preferences import preferences_api
 from api.chat import chat_api
-from api.usersDb import usersDb_api
 from api.bookadaptation import bookadaptation_api
 from api.vote import vote_api
 from api.bookadaptationsdb import books_api
@@ -78,7 +77,6 @@ app.register_blueprint(student_api)
 app.register_blueprint(preferences_api)
 app.register_blueprint(post_api, url_prefix='/api')
 app.register_blueprint(chat_api, url_prefix='/api')
-app.register_blueprint(usersDb_api)
 app.register_blueprint(bookadaptation_api)
 app.register_blueprint(booking_api)
 app.register_blueprint(books_api)
