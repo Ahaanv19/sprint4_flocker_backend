@@ -40,6 +40,7 @@ from api.litawardsdb import awards_api  # New import for Literary Awards API
 from api.lib import lib_api
 from api.sections import sections_bp
 from api.favoriteBooks import favbook_api
+from api.bookProgress import book_progress_api
 
 # database Initialization functions
 from model.carChat import CarChat
@@ -55,6 +56,7 @@ from model.booking import Booking, initbooking
 from model.bookquotesdb import Quote, initQuotes
 from model.litawardsdb import LiteraryAward, initLiteraryAwards  # New imports for Literary Awards
 from model.favoriteBooks import FavoriteBook, initFavoriteBooks
+from model.bookProgress import BookProgress, initBookProgress
 
 main = Flask(__name__)
 CORS(main, origins=["https://ahaanv19.github.io"], supports_credentials=True)
@@ -85,6 +87,7 @@ app.register_blueprint(quotes_api)
 app.register_blueprint(awards_api)  # New registration for Literary Awards API
 app.register_blueprint(lib_api)
 app.register_blueprint(favbook_api)
+app.register_blueprint(book_progress_api)
 
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
@@ -243,6 +246,11 @@ def generate_data():
         initFavoriteBooks()
     except Exception as e:
         print(f"Error in initFavoriteBooks: {e}")
+
+    try:
+        initBookProgress()
+    except Exception as e:
+        print(f"Error in initBookProgress: {e}")
 
 # Backup the old database
 def backup_database(db_uri, backup_uri):
