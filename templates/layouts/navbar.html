@@ -1,20 +1,20 @@
 <!-- Navigation Bar from bootstrap
 This HTML is setup as a fragment allowing it to be "included" by other HTML files via Jinja2
 -->
-<nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+<nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
     <div class="container-fluid">
         <div class="btn-group">
-            <img src="{{ url_for('static', filename='assets/ncs_logo.png') }}" width="50" height="50" class="d-inline-block align-center" alt="">
-            <a class="navbar-brand" href="https://ahaanv19.github.io/LitConnect/">{{basename}}</a>
+            <img src="{{ url_for('static', filename='assets/bookicon.avif') }}" width="50" height="50" class="d-inline-block align-center" alt="">
+            <a class="navbar-brand" href="https://ahaanv19.github.io/LitConnect/" style="color: #ffffff;">{{basename}}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="navbar-nav">
                 <!-- url_for is a Jinja2 pre-processor that finds route from function name (def) -->
-                <a class="nav-link" href={{ url_for('index') }}>Home</a>
+                <a class="nav-link" href={{ url_for('index') }} style="color: #ffffff;">Home</a>
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #ffffff;">
                       Data 
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
@@ -23,7 +23,7 @@ This HTML is setup as a fragment allowing it to be "included" by other HTML file
                     </ul>
                 </div>
                 <div class="dropdown px-3">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" id="githubDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="githubDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color: #ffffff;">
                         Github
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="githubDropdown">
@@ -43,7 +43,7 @@ This HTML is setup as a fragment allowing it to be "included" by other HTML file
             
             {% if current_user.is_authenticated %}
                 <div class="dropdown px-3">
-                    <span class="dropdown-toggle link-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="dropdown-toggle link-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #ffffff;">
                         {{ current_user.name }}
                     </span>
                     <ul class="dropdown-menu dropdown-menu-dark">
@@ -59,7 +59,7 @@ This HTML is setup as a fragment allowing it to be "included" by other HTML file
                     </ul>
                 </div>
             {% else %}
-                <a href="{{ url_for('login') }}" class="px-3 link-dark">Login</a>
+                <a href="{{ url_for('login') }}" class="px-3 link-dark" style="color: #ffffff;">Login</a>
             {% endif %}
             
 
